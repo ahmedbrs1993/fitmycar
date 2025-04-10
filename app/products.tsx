@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     marginHorizontal: 10,
     justifyContent: "space-between",
-    gap: 12, // Add some space between items
+    gap: 12,
   },
   productCard: {
     width: "48%",
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 12,
     marginBottom: 16,
-    alignItems: "center", // ⬅️ Center content
+    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -173,12 +173,12 @@ const styles = StyleSheet.create({
   },
   productImage: {
     width: "100%",
-    height: 250, // ⬆️ Increased image height
+    height: 250,
     borderRadius: 8,
     marginBottom: 12,
   },
   productDetails: {
-    alignItems: "center", // ⬅️ Center text
+    alignItems: "center",
   },
   productName: {
     fontSize: 16,

@@ -2,7 +2,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   Image,
   Pressable,
   ScrollView,
@@ -14,9 +13,7 @@ import { cars } from "../data/cars";
 import Header from "../components/Header";
 
 const chat = require("../assets/images/chat.png");
-const { width } = Dimensions.get("window");
 
-// Number of models per page
 const MODELS_PER_PAGE = 12;
 
 export default function ModelsScreen() {
@@ -54,11 +51,11 @@ export default function ModelsScreen() {
 
         {/* Models Grid - 3 per row */}
         <View style={styles.gridContainer}>
-          {paginatedModels.map((model, index) => (
+          {paginatedModels.map((model) => (
             <View key={model} style={styles.modelContainer}>
               <Link
                 href={{
-                  pathname: "/products", // or "/batteries", depending on your routing
+                  pathname: "/products",
                   params: {
                     product,
                     brand,
@@ -130,7 +127,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   modelContainer: {
-    width: "32%", // 3 items per row
+    width: "32%",
     marginBottom: 16,
   },
   modelItem: {

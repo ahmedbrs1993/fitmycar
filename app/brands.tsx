@@ -1,22 +1,13 @@
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, Text, Pressable, Image, StyleSheet } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+
 import { cars } from "../data/cars";
 import Header from "../components/Header";
 
 const chat = require("../assets/images/chat.png");
-const { width } = Dimensions.get("window");
-
-// Number of brands per page
 const BRANDS_PER_PAGE = 12;
 
 export default function BrandsScreen() {
@@ -24,7 +15,6 @@ export default function BrandsScreen() {
   const totalPages = Math.ceil(cars.length / BRANDS_PER_PAGE);
   const { product } = useLocalSearchParams();
 
-  // Get brands for current page
   const paginatedBrands = cars.slice(
     (currentPage - 1) * BRANDS_PER_PAGE,
     currentPage * BRANDS_PER_PAGE
@@ -115,7 +105,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   brandContainer: {
-    width: "32%", // 3 items per row (100%/3 - some margin)
+    width: "32%",
     marginBottom: 16,
   },
   scrollContainer: {
@@ -135,16 +125,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
-    height: 100, // Fixed height for consistency
+    height: 100,
   },
   brandText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "black", // Dark green color
+    color: "black",
     textAlign: "center",
   },
   disabledButton: {
-    backgroundColor: "#A5D6A7", // Light green for disabled
+    backgroundColor: "#A5D6A7",
   },
   paginationContainer: {
     flexDirection: "row",
@@ -179,13 +169,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   instructionContainer: {
-    backgroundColor: "white", // Light red background
+    backgroundColor: "white",
     padding: 12,
     width: "100%",
     alignItems: "center",
   },
   instructionText: {
-    color: "#D32F2F", // Dark red text
+    color: "#D32F2F",
     fontSize: 16,
     fontWeight: "bold",
   },

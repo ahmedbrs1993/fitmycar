@@ -16,9 +16,9 @@ const slogan = require("../assets/images/auchan-slogan.jpg");
 const leftImage = require("../assets/images/auchan-recharge.jpg");
 
 export default function HomeScreen() {
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const isTablet = width >= 1024;
-  const isSmallMobile = width < 450;
+  const isSmallScreen = width < 450;
   const router = useRouter();
 
   return (
@@ -31,8 +31,8 @@ export default function HomeScreen() {
             source={slogan}
             style={[
               {
-                width: isSmallMobile ? width * 0.7 : width * 0.4,
-                height: isSmallMobile
+                width: isSmallScreen ? width * 0.7 : width * 0.4,
+                height: isSmallScreen
                   ? width * 0.7 * (80 / 400)
                   : width * 0.4 * (80 / 400),
               },
@@ -74,10 +74,10 @@ export default function HomeScreen() {
                   style={[
                     styles.brick,
                     {
-                      width: isTablet ? "32%" : "48%", // 3 or 2 per row
-                      aspectRatio: 1, // Force square shape
-                      minHeight: isTablet ? 150 : 120, // Minimum sizes
-                      maxHeight: isTablet ? 185 : 150, // Maximum sizes
+                      width: isTablet ? "32%" : "48%",
+                      aspectRatio: 1,
+                      minHeight: isTablet ? 150 : 120,
+                      maxHeight: isTablet ? 185 : 150,
                     },
                     (item.name === "Lave-glaces (conseils)" ||
                       item.name === "Liquide de refroidissement (conseils)") &&
@@ -96,7 +96,7 @@ export default function HomeScreen() {
                   <Text
                     style={[
                       styles.brickText,
-                      { fontSize: isSmallMobile ? 13 : isTablet ? 16 : 14 },
+                      { fontSize: isSmallScreen ? 13 : isTablet ? 16 : 14 },
                     ]}
                   >
                     {item.name}
@@ -106,8 +106,8 @@ export default function HomeScreen() {
                     style={[
                       styles.brickIcon,
                       {
-                        width: isSmallMobile ? 30 : 40,
-                        height: isSmallMobile ? 30 : 40,
+                        width: isSmallScreen ? 30 : 40,
+                        height: isSmallScreen ? 30 : 40,
                       },
                     ]}
                   />

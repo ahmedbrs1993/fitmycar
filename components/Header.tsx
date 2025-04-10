@@ -21,7 +21,7 @@ export default function Header({
   showHome = false,
 }: HeaderProps) {
   const { width } = useWindowDimensions();
-  const isSmallScreen = width < 500; // tweak this threshold if needed
+  const isSmallScreen = width < 450;
 
   return (
     <View style={styles.container}>
