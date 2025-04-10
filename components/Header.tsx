@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Link } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Colors } from "../constants/Colors";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -95,9 +96,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 16,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    borderBottomColor: Colors.lightBorder,
     borderRadius: 16,
   },
   leftContainer: {
@@ -109,21 +110,21 @@ const styles = StyleSheet.create({
     height: 40,
   },
   navButton: {
-    backgroundColor: "#4CAF50", // Green color
+    backgroundColor: Colors.primary,
     paddingVertical: 8,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
   },
   navButtonText: {
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
     fontSize: 16,
     marginLeft: 12,
   },
   navSmallButtonText: {
     fontSize: 14,
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
     marginLeft: 8,
   },
@@ -134,6 +135,6 @@ const styles = StyleSheet.create({
   backIcon: {
     fontSize: 24,
     marginRight: 4,
-    color: "white",
+    color: Colors.white,
   },
 });

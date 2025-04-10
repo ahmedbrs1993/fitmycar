@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, Link } from "expo-router";
 import { useState } from "react";
 import { cars } from "../data/cars";
+import { Colors } from "../constants/Colors";
 import Header from "../components/Header";
 
 const chat = require("../assets/images/chat.png");
@@ -110,15 +111,15 @@ export default function ModelsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     padding: 16,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: Colors.lightBackground,
     textAlign: "center",
-    color: "#2E7D32",
+    color: Colors.primary,
   },
   gridContainer: {
     flexDirection: "row",
@@ -131,16 +132,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   modelItem: {
-    backgroundColor: "#E5E5E5",
+    backgroundColor: Colors.lightGrey,
     padding: 16,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3.84,
     elevation: 5,
@@ -156,7 +154,7 @@ const styles = StyleSheet.create({
   modelText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.black,
     textAlign: "center",
   },
   paginationContainer: {
@@ -165,12 +163,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     marginTop: "auto",
-    backgroundColor: "#f8f8f8",
+    backgroundColor: Colors.lightBackground,
     borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
+    borderTopColor: Colors.lightBorder,
   },
   paginationButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: Colors.primary,
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 30,
@@ -179,17 +177,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   disabledButton: {
-    backgroundColor: "#A5D6A7",
+    backgroundColor: Colors.disabledGreen,
   },
   paginationText: {
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
     fontSize: 16,
   },
   pageIndicator: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#4CAF50",
+    color: Colors.primary,
     marginHorizontal: 15,
     minWidth: 60,
     textAlign: "center",
@@ -200,7 +198,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   instructionText: {
-    color: "#D32F2F",
+    color: Colors.red,
     fontSize: 16,
     fontWeight: "bold",
   },

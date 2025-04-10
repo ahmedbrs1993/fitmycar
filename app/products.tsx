@@ -11,6 +11,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { products } from "../data/products";
+import { Colors } from "../constants/Colors";
+
 import Header from "../components/Header";
 
 type ProductType =
@@ -114,7 +116,7 @@ export default function ProductsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -132,7 +134,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   productTypeHighlight: {
-    color: "#4CAF50",
+    color: Colors.primary,
     fontWeight: "bold",
   },
   brandModelContainer: {
@@ -147,7 +149,7 @@ const styles = StyleSheet.create({
   resultsTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#D32F2F",
+    color: Colors.red,
     textAlign: "center",
     paddingBottom: 8,
   },
@@ -160,12 +162,12 @@ const styles = StyleSheet.create({
   },
   productCard: {
     width: "48%",
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
     borderRadius: 16,
     padding: 12,
     marginBottom: 16,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -188,14 +190,14 @@ const styles = StyleSheet.create({
   },
   productBrand: {
     fontSize: 14,
-    color: "#666",
+    color: Colors.darkGrey,
     marginBottom: 2,
     textAlign: "center",
   },
   productPrice: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#4CAF50",
+    color: Colors.primary,
     marginBottom: 6,
     textAlign: "center",
   },
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
   },
   specText: {
     fontSize: 14,
-    color: "#666",
+    color: Colors.darkGrey,
     lineHeight: 18,
   },
   topRowContainer: {
@@ -229,19 +231,19 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#333",
+    color: Colors.darkGrey,
     textAlign: "center",
   },
   highlightedText: {
-    color: "#4CAF50",
+    color: Colors.primary,
     fontWeight: "bold",
   },
   vehicleBrand: {
     fontWeight: "bold",
-    color: "#333",
+    color: Colors.black,
   },
   vehicleModel: {
-    color: "#777",
+    color: Colors.darkGrey,
     fontWeight: "bold",
   },
 });

@@ -3,8 +3,9 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-
 import { cars } from "../data/cars";
+import { Colors } from "../constants/Colors";
+
 import Header from "../components/Header";
 
 const chat = require("../assets/images/chat.png");
@@ -92,7 +93,7 @@ export default function BrandsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
   },
   chat: {
     width: 100,
@@ -112,12 +113,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   brandItem: {
-    backgroundColor: "#E5E5E5",
+    backgroundColor: Colors.lightGrey,
     padding: 20,
     borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
+    shadowColor: Colors.black,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -130,11 +131,11 @@ const styles = StyleSheet.create({
   brandText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.black,
     textAlign: "center",
   },
   disabledButton: {
-    backgroundColor: "#A5D6A7",
+    backgroundColor: Colors.disabledGreen,
   },
   paginationContainer: {
     flexDirection: "row",
@@ -142,12 +143,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     marginTop: 10,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: Colors.lightBackground,
     borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
+    borderTopColor: Colors.lightBorder,
   },
   paginationButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: Colors.primary,
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 30,
@@ -156,26 +157,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   paginationText: {
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold",
     fontSize: 16,
   },
   pageIndicator: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#4CAF50",
+    color: Colors.primary,
     marginHorizontal: 15,
     minWidth: 60,
     textAlign: "center",
   },
   instructionContainer: {
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
     padding: 12,
     width: "100%",
     alignItems: "center",
   },
   instructionText: {
-    color: "#D32F2F",
+    color: Colors.red,
     fontSize: 16,
     fontWeight: "bold",
   },

@@ -10,6 +10,7 @@ import {
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { bricks } from "../data/bricks";
+import { Colors } from "../constants/Colors";
 import Header from "../components/Header";
 
 const slogan = require("../assets/images/auchan-slogan.jpg");
@@ -124,14 +125,14 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
   },
   scrollContainer: {
     flexGrow: 1,
   },
   sloganContainer: {
     alignItems: "flex-start",
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
   },
   content: {
     flex: 1,
@@ -170,17 +171,17 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   brick: {
-    backgroundColor: "#81C784",
+    backgroundColor: Colors.secondary,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
     padding: 8,
   },
   greyBackground: {
-    backgroundColor: "#d3d3d3",
+    backgroundColor: Colors.grey,
   },
   whiteBackground: {
-    backgroundColor: "#fff",
+    backgroundColor: Colors.white,
   },
   brickText: {
     color: "black",
