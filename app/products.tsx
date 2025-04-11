@@ -73,8 +73,9 @@ export default function ProductsScreen() {
                 style={styles.icon}
               />
 
-              <Text style={styles.vehicleBrand}>{brand}</Text>
-              <Text style={styles.vehicleModel}> {model}</Text>
+              <Text style={styles.vehicleBrand}>
+                {brand} <Text style={styles.vehicleModel}> {model}</Text>
+              </Text>
             </View>
           </View>
         </View>
@@ -245,5 +246,10 @@ const styles = StyleSheet.create({
   vehicleModel: {
     color: Colors.darkGrey,
     fontWeight: "bold",
+  },
+  brandModelRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    flexShrink: 1,
   },
 });
