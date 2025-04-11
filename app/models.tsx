@@ -11,6 +11,9 @@ import { useLocalSearchParams, Link } from "expo-router";
 import { useState } from "react";
 import { cars } from "../data/cars";
 import { Colors } from "../constants/Colors";
+import { Spacing } from "../constants/Spacing";
+import { Typography } from "../constants/Typography";
+
 import Header from "../components/Header";
 
 const chat = require("../assets/images/chat.png");
@@ -113,10 +116,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.white,
   },
+  scrollContainer: {
+    flexGrow: 1,
+  },
   title: {
-    fontSize: 24,
+    fontSize: Typography.fontSize.xl,
     fontWeight: "bold",
-    padding: 16,
+    padding: Spacing.lg,
     backgroundColor: Colors.lightBackground,
     textAlign: "center",
     color: Colors.primary,
@@ -125,16 +131,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    padding: 16,
+    padding: Spacing.lg,
   },
   modelContainer: {
     width: "32%",
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
   modelItem: {
     backgroundColor: Colors.lightGrey,
-    padding: 16,
-    borderRadius: 12,
+    padding: Spacing.lg,
+    borderRadius: Spacing.lg,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: Colors.black,
@@ -144,15 +150,12 @@ const styles = StyleSheet.create({
     elevation: 5,
     height: 100,
   },
-  scrollContainer: {
-    flexGrow: 1,
-  },
   chat: {
     width: 100,
     height: 40,
   },
   modelText: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
     fontWeight: "bold",
     color: Colors.black,
     textAlign: "center",
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    padding: Spacing.xl,
     marginTop: "auto",
     backgroundColor: Colors.lightBackground,
     borderTopWidth: 1,
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
   },
   paginationButton: {
     backgroundColor: Colors.primary,
-    paddingVertical: 12,
+    paddingVertical: Spacing.md,
     paddingHorizontal: 25,
     borderRadius: 30,
     marginHorizontal: 15,
@@ -182,10 +185,10 @@ const styles = StyleSheet.create({
   paginationText: {
     color: Colors.white,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
   },
   pageIndicator: {
-    fontSize: 18,
+    fontSize: Typography.fontSize.lg,
     fontWeight: "600",
     color: Colors.primary,
     marginHorizontal: 15,
@@ -193,13 +196,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   instructionContainer: {
-    padding: 12,
+    padding: Spacing.md,
     width: "100%",
     alignItems: "center",
   },
   instructionText: {
     color: Colors.red,
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
     fontWeight: "bold",
   },
 });

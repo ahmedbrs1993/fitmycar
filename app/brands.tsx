@@ -5,6 +5,8 @@ import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { cars } from "../data/cars";
 import { Colors } from "../constants/Colors";
+import { Spacing } from "../constants/Spacing";
+import { Typography } from "../constants/Typography";
 
 import Header from "../components/Header";
 
@@ -103,19 +105,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    padding: 16,
+    padding: Spacing.lg,
   },
   brandContainer: {
     width: "32%",
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
   scrollContainer: {
     flexGrow: 1,
   },
   brandItem: {
     backgroundColor: Colors.lightGrey,
-    padding: 20,
-    borderRadius: 12,
+    padding: Spacing.xl,
+    borderRadius: Spacing.md,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: Colors.black,
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   brandText: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
     fontWeight: "bold",
     color: Colors.black,
     textAlign: "center",
@@ -141,15 +143,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
-    marginTop: 10,
+    padding: Spacing.xl,
+    marginTop: Spacing.md,
     backgroundColor: Colors.lightBackground,
     borderTopWidth: 1,
     borderTopColor: Colors.lightBorder,
   },
   paginationButton: {
     backgroundColor: Colors.primary,
-    paddingVertical: 12,
+    paddingVertical: Spacing.md,
     paddingHorizontal: 25,
     borderRadius: 30,
     marginHorizontal: 15,
@@ -159,10 +161,10 @@ const styles = StyleSheet.create({
   paginationText: {
     color: Colors.white,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
   },
   pageIndicator: {
-    fontSize: 18,
+    fontSize: Typography.fontSize.lg,
     fontWeight: "600",
     color: Colors.primary,
     marginHorizontal: 15,
@@ -171,13 +173,13 @@ const styles = StyleSheet.create({
   },
   instructionContainer: {
     backgroundColor: Colors.white,
-    padding: 12,
+    padding: Spacing.md,
     width: "100%",
     alignItems: "center",
   },
   instructionText: {
     color: Colors.red,
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
     fontWeight: "bold",
   },
 });

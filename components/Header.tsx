@@ -9,6 +9,8 @@ import {
 import { Link } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "../constants/Colors";
+import { Spacing } from "../constants/Spacing";
+import { Typography } from "../constants/Typography";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -95,15 +97,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 16,
+    padding: Spacing.lg,
     backgroundColor: Colors.white,
     borderBottomWidth: 1,
     borderBottomColor: Colors.lightBorder,
-    borderRadius: 16,
+    borderRadius: Spacing.xl,
   },
   leftContainer: {
     flexDirection: "row",
-    gap: 12,
+    gap: Spacing.md,
   },
   logo: {
     width: 100,
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
   },
   navButton: {
     backgroundColor: Colors.primary,
-    paddingVertical: 8,
+    paddingVertical: Spacing.sm,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
@@ -119,22 +121,22 @@ const styles = StyleSheet.create({
   navButtonText: {
     color: Colors.white,
     fontWeight: "bold",
-    fontSize: 16,
-    marginLeft: 12,
+    fontSize: Typography.fontSize.base,
+    marginLeft: Spacing.md,
   },
   navSmallButtonText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.sm,
     color: Colors.white,
     fontWeight: "bold",
-    marginLeft: 8,
+    marginLeft: Spacing.sm,
   },
   buttonContent: {
     flexDirection: "row",
     alignItems: "center",
   },
   backIcon: {
-    fontSize: 24,
-    marginRight: 4,
+    fontSize: Typography.fontSize.xl,
+    marginRight: Spacing.xs,
     color: Colors.white,
   },
 });

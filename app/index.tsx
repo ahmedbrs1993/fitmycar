@@ -11,6 +11,8 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { bricks } from "../data/bricks";
 import { Colors } from "../constants/Colors";
+import { Spacing } from "../constants/Spacing";
+import { Typography } from "../constants/Typography";
 import Header from "../components/Header";
 
 const slogan = require("../assets/images/auchan-slogan.jpg");
@@ -136,7 +138,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 10,
+    padding: Spacing.md - 2, // 10
     flexDirection: "row",
     maxHeight: 600,
   },
@@ -145,8 +147,8 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     flex: 1,
-    marginRight: 20,
-    borderRadius: 12,
+    marginRight: Spacing.xl, // 20
+    borderRadius: Spacing.md, // 12
     overflow: "hidden",
   },
   leftImage: {
@@ -155,8 +157,8 @@ const styles = StyleSheet.create({
   },
   mobileImageContainer: {
     flex: 1,
-    marginBottom: 20,
-    borderRadius: 12,
+    marginBottom: Spacing.xl, // 20
+    borderRadius: Spacing.md,
     overflow: "hidden",
   },
   mobileImage: {
@@ -168,14 +170,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    gap: 8,
+    gap: Spacing.sm,
   },
   brick: {
     backgroundColor: Colors.secondary,
-    borderRadius: 5,
+    borderRadius: Spacing.xs + 1,
     alignItems: "center",
     justifyContent: "center",
-    padding: 8,
+    padding: Spacing.sm,
   },
   greyBackground: {
     backgroundColor: Colors.grey,
@@ -184,10 +186,11 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
   },
   brickText: {
-    color: "black",
+    color: Colors.black,
     fontWeight: "bold",
+    fontSize: Typography.fontSize.sm,
     textAlign: "center",
-    marginBottom: 5,
+    marginBottom: Spacing.xs + 1,
   },
   brickIcon: {
     resizeMode: "contain",
