@@ -29,126 +29,110 @@ export default function HomeScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
   const { brand, model } = useSelector((state: RootState) => state.vehicle);
-
   const hasVehicleConfig = !!brand && !!model;
 
   const handleBrickPress = (product: string) => {
     if (hasVehicleConfig) {
-      router.push({
-        pathname: "/products",
-        params: { product, brand, model },
-      });
+      router.push({ pathname: "/products", params: { product, brand, model } });
     } else {
-      router.push({
-        pathname: "/brands",
-        params: { product },
-      });
+      router.push({ pathname: "/brands", params: { product } });
     }
   };
+
+  const renderSloganSection = () => (
+    <View style={styles.sloganContainer}>
+      <Image
+        source={slogan}
+        style={{
+          width: isSmallScreen ? width * 0.7 : width * 0.4,
+          height: isSmallScreen
+            ? width * 0.7 * (80 / 400)
+            : width * 0.4 * (80 / 400),
+        }}
+        resizeMode="contain"
+      />
+      {hasVehicleConfig && isTablet && (
+        <Pressable
+          onPress={() => dispatch(clearVehicleConfig())}
+          style={styles.reinitializeButton}
+        >
+          <Text style={styles.reinitializeText}>
+            Réinitialiser véhicule : {brand} {model}
+          </Text>
+        </Pressable>
+      )}
+    </View>
+  );
+
+  const renderBrick = (item: (typeof bricks)[0], index: number) => (
+    <Pressable
+      key={index}
+      style={[
+        styles.brick,
+        {
+          width: isTablet ? "32%" : "48%",
+          aspectRatio: 1,
+          minHeight: isTablet ? 150 : 120,
+          maxHeight: isTablet ? 185 : 150,
+        },
+        (item.name === "Lave-glaces (conseils)" ||
+          item.name === "Liquide de refroidissement (conseils)") &&
+          styles.greyBackground,
+        item.name === "" && styles.whiteBackground,
+      ]}
+      onPress={() => item.product && handleBrickPress(item.product)}
+    >
+      <Text style={[styles.brickText, { fontSize: isSmallScreen ? 14 : 16 }]}>
+        {item.name}
+      </Text>
+      <Image
+        source={item.icon}
+        style={{
+          width: isSmallScreen ? 30 : 40,
+          height: isSmallScreen ? 30 : 40,
+        }}
+      />
+    </Pressable>
+  );
+
+  const renderTabletLayout = () => (
+    <View style={styles.content}>
+      <View style={[styles.leftContainer, { height: "100%" }]}>
+        <Image
+          source={leftImage}
+          style={[styles.leftImage, { aspectRatio: 1 }]}
+          resizeMode="cover"
+        />
+      </View>
+      <View style={styles.rightContainer}>{bricks.map(renderBrick)}</View>
+    </View>
+  );
+
+  const renderMobileLayout = () => (
+    <View style={styles.contentMobile}>
+      <View style={styles.mobileImageContainer}>
+        <Image source={leftImage} style={styles.mobileImage} />
+      </View>
+      {hasVehicleConfig && (
+        <Pressable
+          onPress={() => dispatch(clearVehicleConfig())}
+          style={styles.reinitializeButton}
+        >
+          <Text style={styles.reinitializeText}>
+            Réinitialiser véhicule : {brand} {model}
+          </Text>
+        </Pressable>
+      )}
+      <View style={styles.rightContainer}>{bricks.map(renderBrick)}</View>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Header />
-
-        <View style={styles.sloganContainer}>
-          <Image
-            source={slogan}
-            style={{
-              width: isSmallScreen ? width * 0.7 : width * 0.4,
-              height: isSmallScreen
-                ? width * 0.7 * (80 / 400)
-                : width * 0.4 * (80 / 400),
-            }}
-            resizeMode="contain"
-          />
-          {hasVehicleConfig && isTablet && (
-            <Pressable
-              onPress={() => dispatch(clearVehicleConfig())}
-              style={styles.reinitializeButton}
-            >
-              <Text style={styles.reinitializeText}>
-                Réinitialiser véhicule : {brand} {model}
-              </Text>
-            </Pressable>
-          )}
-        </View>
-
-        <View>
-          <View style={[styles.content, !isTablet && styles.contentMobile]}>
-            {!isTablet && (
-              <View style={styles.mobileImageContainer}>
-                <Image source={leftImage} style={styles.mobileImage} />
-              </View>
-            )}
-
-            {hasVehicleConfig && !isTablet && (
-              <Pressable
-                onPress={() => dispatch(clearVehicleConfig())}
-                style={styles.reinitializeButton}
-              >
-                <Text style={styles.reinitializeText}>
-                  Réinitialiser véhicule : {brand} {model}
-                </Text>
-              </Pressable>
-            )}
-
-            {isTablet && (
-              <View style={[styles.leftContainer, { height: "100%" }]}>
-                <Image
-                  source={leftImage}
-                  style={[styles.leftImage, { aspectRatio: 1 }]}
-                  resizeMode="cover"
-                />
-              </View>
-            )}
-
-            <View
-              style={[
-                styles.rightContainer,
-                {
-                  maxWidth: isTablet ? undefined : "100%",
-                },
-              ]}
-            >
-              {bricks.map((item, index) => (
-                <Pressable
-                  key={index}
-                  style={[
-                    styles.brick,
-                    {
-                      width: isTablet ? "32%" : "48%",
-                      aspectRatio: 1,
-                      minHeight: isTablet ? 150 : 120,
-                      maxHeight: isTablet ? 185 : 150,
-                    },
-                    (item.name === "Lave-glaces (conseils)" ||
-                      item.name === "Liquide de refroidissement (conseils)") &&
-                      styles.greyBackground,
-                    item.name === "" && styles.whiteBackground,
-                  ]}
-                  onPress={() => item.product && handleBrickPress(item.product)}
-                >
-                  <Text
-                    style={[
-                      styles.brickText,
-                      { fontSize: isSmallScreen ? 14 : 16 },
-                    ]}
-                  >
-                    {item.name}
-                  </Text>
-                  <Image
-                    source={item.icon}
-                    style={{
-                      width: isSmallScreen ? 30 : 40,
-                      height: isSmallScreen ? 30 : 40,
-                    }}
-                  />
-                </Pressable>
-              ))}
-            </View>
-          </View>
-        </View>
+        {renderSloganSection()}
+        {isTablet ? renderTabletLayout() : renderMobileLayout()}
       </ScrollView>
     </SafeAreaView>
   );
@@ -201,7 +185,7 @@ const styles = StyleSheet.create({
   },
   mobileImageContainer: {
     flex: 1,
-    marginBottom: Spacing.xl, // 20
+    margin: Spacing.md, // 20
     borderRadius: Spacing.md,
     overflow: "hidden",
   },
@@ -214,6 +198,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+    margin: Spacing.md,
     gap: Spacing.sm,
   },
   brick: {
