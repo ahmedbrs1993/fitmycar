@@ -13,6 +13,10 @@ import { bricks } from "../data/bricks";
 import { Colors } from "../constants/Colors";
 import { Spacing } from "../constants/Spacing";
 import { Typography } from "../constants/Typography";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store";
+import { clearVehicleConfig } from "../store/vehicleSlice";
+
 import Header from "../components/Header";
 
 const slogan = require("../assets/images/auchan-slogan.jpg");
@@ -23,6 +27,24 @@ export default function HomeScreen() {
   const isTablet = width >= 1024;
   const isSmallScreen = width < 450;
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { brand, model } = useSelector((state: RootState) => state.vehicle);
+
+  const hasVehicleConfig = !!brand && !!model;
+
+  const handleBrickPress = (product: string) => {
+    if (hasVehicleConfig) {
+      router.push({
+        pathname: "/products",
+        params: { product, brand, model },
+      });
+    } else {
+      router.push({
+        pathname: "/brands",
+        params: { product },
+      });
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,25 +54,43 @@ export default function HomeScreen() {
         <View style={styles.sloganContainer}>
           <Image
             source={slogan}
-            style={[
-              {
-                width: isSmallScreen ? width * 0.7 : width * 0.4,
-                height: isSmallScreen
-                  ? width * 0.7 * (80 / 400)
-                  : width * 0.4 * (80 / 400),
-              },
-            ]}
+            style={{
+              width: isSmallScreen ? width * 0.7 : width * 0.4,
+              height: isSmallScreen
+                ? width * 0.7 * (80 / 400)
+                : width * 0.4 * (80 / 400),
+            }}
             resizeMode="contain"
           />
+          {hasVehicleConfig && isTablet && (
+            <Pressable
+              onPress={() => dispatch(clearVehicleConfig())}
+              style={styles.reinitializeButton}
+            >
+              <Text style={styles.reinitializeText}>
+                Réinitialiser véhicule : {brand} {model}
+              </Text>
+            </Pressable>
+          )}
         </View>
 
         <View>
           <View style={[styles.content, !isTablet && styles.contentMobile]}>
-            {/* Show image first on mobile */}
             {!isTablet && (
               <View style={styles.mobileImageContainer}>
                 <Image source={leftImage} style={styles.mobileImage} />
               </View>
+            )}
+
+            {hasVehicleConfig && !isTablet && (
+              <Pressable
+                onPress={() => dispatch(clearVehicleConfig())}
+                style={styles.reinitializeButton}
+              >
+                <Text style={styles.reinitializeText}>
+                  Réinitialiser véhicule : {brand} {model}
+                </Text>
+              </Pressable>
             )}
 
             {isTablet && (
@@ -87,32 +127,22 @@ export default function HomeScreen() {
                       styles.greyBackground,
                     item.name === "" && styles.whiteBackground,
                   ]}
-                  onPress={() => {
-                    if (item.product) {
-                      router.push({
-                        pathname: "/brands",
-                        params: { product: item.product },
-                      });
-                    }
-                  }}
+                  onPress={() => item.product && handleBrickPress(item.product)}
                 >
                   <Text
                     style={[
                       styles.brickText,
-                      { fontSize: isSmallScreen ? 13 : isTablet ? 16 : 14 },
+                      { fontSize: isSmallScreen ? 14 : 16 },
                     ]}
                   >
                     {item.name}
                   </Text>
                   <Image
                     source={item.icon}
-                    style={[
-                      styles.brickIcon,
-                      {
-                        width: isSmallScreen ? 30 : 40,
-                        height: isSmallScreen ? 30 : 40,
-                      },
-                    ]}
+                    style={{
+                      width: isSmallScreen ? 30 : 40,
+                      height: isSmallScreen ? 30 : 40,
+                    }}
                   />
                 </Pressable>
               ))}
@@ -132,8 +162,22 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
   },
+  reinitializeButton: {
+    backgroundColor: Colors.secondary,
+    padding: 15,
+    alignSelf: "center",
+    borderRadius: 6,
+    margin: 15,
+  },
+  reinitializeText: {
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: Typography.fontSize.base,
+  },
   sloganContainer: {
-    alignItems: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
     backgroundColor: Colors.white,
   },
   content: {
@@ -173,7 +217,7 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   brick: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.primary,
     borderRadius: Spacing.xs + 1,
     alignItems: "center",
     justifyContent: "center",
@@ -188,7 +232,7 @@ const styles = StyleSheet.create({
   brickText: {
     color: Colors.black,
     fontWeight: "bold",
-    fontSize: Typography.fontSize.sm,
+    fontSize: Typography.fontSize.lg,
     textAlign: "center",
     marginBottom: Spacing.xs + 1,
   },

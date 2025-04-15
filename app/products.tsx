@@ -12,6 +12,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { products } from "../data/products";
 import { Colors } from "../constants/Colors";
+import { useDispatch } from "react-redux";
+import { setVehicleConfig } from "../store/vehicleSlice";
+import { useEffect } from "react";
 
 import Header from "../components/Header";
 
@@ -39,6 +42,14 @@ export default function ProductsScreen() {
     brand?: string;
     model?: string;
   }>();
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (brand && model) {
+      dispatch(setVehicleConfig({ brand, model }));
+    }
+  }, [product, brand, model]);
 
   const allProducts: ProductItem[] = products[product] || [];
 

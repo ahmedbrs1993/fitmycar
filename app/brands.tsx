@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: Spacing.xl,
-    marginTop: Spacing.md,
+    marginTop: "auto",
     backgroundColor: Colors.lightBackground,
     borderTopWidth: 1,
     borderTopColor: Colors.lightBorder,
