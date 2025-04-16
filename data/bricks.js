@@ -30,7 +30,7 @@ const bricks = [
   },
   {
     name: "",
-    icon: require("../assets/images/auchan.jpg"),
+    icon: require("../assets/images/icon.png"),
   },
   {
     name: "Lave-glaces (conseils)",

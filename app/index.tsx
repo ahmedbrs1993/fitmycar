@@ -192,10 +192,10 @@ const styles = StyleSheet.create({
   },
   reinitializeButton: {
     backgroundColor: Colors.secondary,
-    padding: 15,
+    padding: Spacing.lg - 1,
     alignSelf: "center",
     borderRadius: 6,
-    marginHorizontal: 15,
+    marginHorizontal: Spacing.lg - 1,
   },
   reinitializeText: {
     color: Colors.white,
@@ -282,7 +282,6 @@ const styles = StyleSheet.create({
   downloadImage: {
     width: 24,
     height: 24,
-    marginRight: 10,
     resizeMode: "contain",
   },
   textContainer: {
@@ -297,6 +296,5 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontWeight: "bold",
     fontSize: 16,
-    marginTop: -2, // tighten spacing
   },
 });
