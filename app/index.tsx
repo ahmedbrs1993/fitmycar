@@ -6,6 +6,7 @@ import {
   Pressable,
   useWindowDimensions,
   ScrollView,
+  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -21,9 +22,11 @@ import Header from "../components/Header";
 
 const slogan = require("../assets/images/auchan-slogan.jpg");
 const leftImage = require("../assets/images/auchan-recharge.jpg");
+const googlePlay = require("../assets/images/google-play.png");
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
+  const isWeb = Platform.OS === "web";
   const isTablet = width >= 1024;
   const isSmallScreen = width < 450;
   const router = useRouter();
@@ -51,16 +54,35 @@ export default function HomeScreen() {
         }}
         resizeMode="contain"
       />
-      {hasVehicleConfig && isTablet && (
-        <Pressable
-          onPress={() => dispatch(clearVehicleConfig())}
-          style={styles.reinitializeButton}
-        >
-          <Text style={styles.reinitializeText}>
-            Réinitialiser véhicule : {brand} {model}
-          </Text>
-        </Pressable>
-      )}
+      <View style={{ alignItems: "center", marginRight: Spacing.md }}>
+        {/* APK Download Button */}
+        {isTablet && (
+          <Pressable
+            onPress={() => {
+              const apkUrl =
+                "https://expo.dev/artifacts/eas/bqLow3TUfDwkZUCnMqJcFp.apk";
+              window.open(apkUrl, "_blank");
+            }}
+            style={styles.downloadButton}
+          >
+            <Image source={googlePlay} style={styles.downloadImage} />
+            <View style={styles.textContainer}>
+              <Text style={styles.downloadTextTop}>Get it on</Text>
+              <Text style={styles.downloadTextBottom}>Google Play</Text>
+            </View>
+          </Pressable>
+        )}
+        {hasVehicleConfig && isTablet && (
+          <Pressable
+            onPress={() => dispatch(clearVehicleConfig())}
+            style={styles.reinitializeButton}
+          >
+            <Text style={styles.reinitializeText}>
+              Réinitialiser véhicule : {brand} {model}
+            </Text>
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 
@@ -113,6 +135,28 @@ export default function HomeScreen() {
       <View style={styles.mobileImageContainer}>
         <Image source={leftImage} style={styles.mobileImage} />
       </View>
+
+      <Pressable
+        onPress={() => {
+          const apkUrl =
+            "https://expo.dev/artifacts/eas/bqLow3TUfDwkZUCnMqJcFp.apk";
+          window.open(apkUrl, "_blank");
+        }}
+        style={[
+          styles.downloadButton,
+          {
+            width: 200,
+            alignSelf: "center",
+          },
+        ]}
+      >
+        <Image source={googlePlay} style={styles.downloadImage} />
+        <View style={styles.textContainer}>
+          <Text style={styles.downloadTextTop}>Get it on</Text>
+          <Text style={styles.downloadTextBottom}>Google Play</Text>
+        </View>
+      </Pressable>
+
       {hasVehicleConfig && (
         <Pressable
           onPress={() => dispatch(clearVehicleConfig())}
@@ -151,7 +195,7 @@ const styles = StyleSheet.create({
     padding: 15,
     alignSelf: "center",
     borderRadius: 6,
-    margin: 15,
+    marginHorizontal: 15,
   },
   reinitializeText: {
     color: Colors.white,
@@ -175,8 +219,8 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     flex: 1,
-    marginRight: Spacing.xl, // 20
-    borderRadius: Spacing.md, // 12
+    marginRight: Spacing.xl,
+    borderRadius: Spacing.md,
     overflow: "hidden",
   },
   leftImage: {
@@ -185,7 +229,7 @@ const styles = StyleSheet.create({
   },
   mobileImageContainer: {
     flex: 1,
-    margin: Spacing.md, // 20
+    margin: Spacing.md,
     borderRadius: Spacing.md,
     overflow: "hidden",
   },
@@ -223,5 +267,36 @@ const styles = StyleSheet.create({
   },
   brickIcon: {
     resizeMode: "contain",
+  },
+  downloadButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: Spacing.md,
+    width: 220,
+    height: "auto",
+    backgroundColor: Colors.black,
+    borderRadius: 6,
+    padding: Spacing.md - 2,
+  },
+  downloadImage: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+    resizeMode: "contain",
+  },
+  textContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  downloadTextTop: {
+    color: Colors.white,
+    fontSize: 12,
+  },
+  downloadTextBottom: {
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: 16,
+    marginTop: -2, // tighten spacing
   },
 });
