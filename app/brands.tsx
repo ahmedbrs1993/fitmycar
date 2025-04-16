@@ -1,4 +1,12 @@
-import { View, Text, Pressable, Image, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  StyleSheet,
+  TextInput,
+  useWindowDimensions,
+} from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
@@ -14,24 +22,70 @@ const chat = require("../assets/images/chat.png");
 const BRANDS_PER_PAGE = 12;
 
 export default function BrandsScreen() {
+  const { width } = useWindowDimensions();
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(cars.length / BRANDS_PER_PAGE);
   const { product } = useLocalSearchParams();
+
+  const isTablet = width >= 1024;
+  const totalPages = Math.ceil(cars.length / BRANDS_PER_PAGE);
 
   const paginatedBrands = cars.slice(
     (currentPage - 1) * BRANDS_PER_PAGE,
     currentPage * BRANDS_PER_PAGE
   );
 
+  const [immatriculation, setImmatriculation] = useState("");
+  const [error, setError] = useState("");
+
+  const handleChange = (text: string) => {
+    const rawText = text.replace(/[^A-Za-z0-9]/g, "").toUpperCase(); // sanitize
+    if (rawText.length <= 7) {
+      setImmatriculation(rawText);
+
+      const regex = /^[A-Z]{2}[0-9]{3}[A-Z]{2}$/;
+      if (rawText.length === 7 && !regex.test(rawText)) {
+        setError("Format invalide. Exemple: AB123CD");
+      } else {
+        setError("");
+      }
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Header showBack={true} showHome={true} />
 
+        <View style={styles.searchContainer}>
+          <Text style={styles.searchTitle}>Voiture et camionnette</Text>
+          <Text style={styles.searchSubtitle}>Par immatriculation</Text>
+          <Text style={styles.searchDescription}>
+            Plus précis et plus rapide pour la sélection de produits et de
+            services.
+          </Text>
+
+          <TextInput
+            style={[styles.searchInput, { width: isTablet ? "25%" : "50%" }]}
+            placeholder="AB-123-CD"
+            placeholderTextColor={Colors.darkGrey}
+            value={immatriculation}
+            onChangeText={handleChange}
+            autoCapitalize="characters"
+            maxLength={7}
+          />
+          {!!error && (
+            <Text style={{ color: "red", marginBottom: 12 }}>{error}</Text>
+          )}
+
+          <Pressable style={styles.searchButton}>
+            <Text style={styles.searchButtonText}>Rechercher</Text>
+          </Pressable>
+        </View>
+
         <View style={styles.instructionContainer}>
           <Image source={chat} style={styles.chat} resizeMode="contain" />
           <Text style={styles.instructionText}>
-            Indiquez la marque de votre véhicule
+            Ou bien Indiquez la marque de votre véhicule
           </Text>
         </View>
 
@@ -181,5 +235,54 @@ const styles = StyleSheet.create({
     color: Colors.red,
     fontSize: Typography.fontSize.base,
     fontWeight: "bold",
+  },
+  searchContainer: {
+    padding: Spacing.lg,
+    backgroundColor: Colors.lightBackground,
+    alignItems: "center", // 💡 centrer tout le contenu
+  },
+  searchTitle: {
+    fontSize: Typography.fontSize.lg,
+    fontWeight: "bold",
+    color: Colors.black,
+    marginBottom: 4,
+    textAlign: "center",
+  },
+  searchSubtitle: {
+    fontSize: Typography.fontSize.base,
+    fontWeight: "600",
+    color: Colors.red,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  searchDescription: {
+    fontSize: Typography.fontSize.sm,
+    color: Colors.darkGrey,
+    marginBottom: Spacing.md,
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
+  searchInput: {
+    backgroundColor: Colors.white,
+    borderColor: Colors.lightBorder,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.sm,
+    fontSize: Typography.fontSize.base,
+    marginBottom: Spacing.md,
+    textAlign: "center",
+  },
+  searchButton: {
+    backgroundColor: Colors.primary,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: 40,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  searchButtonText: {
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: Typography.fontSize.base,
   },
 });
