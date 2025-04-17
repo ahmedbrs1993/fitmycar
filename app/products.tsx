@@ -10,13 +10,13 @@ import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { products } from "../data/products";
-import { Colors } from "../constants/Colors";
+import { products } from "@/data/products";
+import { Colors } from "@/constants/Colors";
 import { useDispatch } from "react-redux";
-import { setVehicleConfig } from "../store/vehicleSlice";
+import { setVehicleConfig } from "@/store/vehicleSlice";
 import { useEffect } from "react";
 
-import Header from "../components/Header";
+import Header from "@/components/Header";
 
 type ProductType =
   | "balais"

@@ -11,22 +11,22 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { cars } from "../data/cars";
-import { Colors } from "../constants/Colors";
-import { Spacing } from "../constants/Spacing";
-import { Typography } from "../constants/Typography";
+import { cars } from "@/data/cars";
+import { Colors } from "@/constants/Colors";
+import { Spacing } from "@/constants/Spacing";
+import { Typography } from "@/constants/Typography";
 
-import Header from "../components/Header";
+import Header from "@/components/Header";
 
-const chat = require("../assets/images/chat.png");
+const chat = require("@/assets/images/chat.png");
 const BRANDS_PER_PAGE = 12;
 
 export default function BrandsScreen() {
   const { width } = useWindowDimensions();
-  const [currentPage, setCurrentPage] = useState(1);
   const { product } = useLocalSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const isTablet = width >= 1024;
+  const isTablet = width >= 870;
   const totalPages = Math.ceil(cars.length / BRANDS_PER_PAGE);
 
   const paginatedBrands = cars.slice(
@@ -206,10 +206,9 @@ const styles = StyleSheet.create({
   paginationButton: {
     backgroundColor: Colors.primary,
     paddingVertical: Spacing.md,
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.xl,
     borderRadius: 30,
-    marginHorizontal: 15,
-    minWidth: 120,
+    marginHorizontal: Spacing.lg,
     alignItems: "center",
   },
   paginationText: {
@@ -221,8 +220,7 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.lg,
     fontWeight: "600",
     color: Colors.primary,
-    marginHorizontal: 15,
-    minWidth: 60,
+    minWidth: 70,
     textAlign: "center",
   },
   instructionContainer: {
@@ -239,7 +237,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     padding: Spacing.lg,
     backgroundColor: Colors.lightBackground,
-    alignItems: "center", // 💡 centrer tout le contenu
+    alignItems: "center",
   },
   searchTitle: {
     fontSize: Typography.fontSize.lg,
@@ -252,7 +250,7 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.base,
     fontWeight: "600",
     color: Colors.red,
-    marginBottom: 8,
+    marginBottom: Spacing.sm,
     textAlign: "center",
   },
   searchDescription: {
@@ -266,7 +264,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     borderColor: Colors.lightBorder,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: Spacing.sm,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.sm,
     fontSize: Typography.fontSize.base,

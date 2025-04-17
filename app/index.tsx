@@ -6,33 +6,34 @@ import {
   Pressable,
   useWindowDimensions,
   ScrollView,
-  Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { bricks } from "../data/bricks";
-import { Colors } from "../constants/Colors";
-import { Spacing } from "../constants/Spacing";
-import { Typography } from "../constants/Typography";
+import { bricks } from "@/data/bricks";
+import { Colors } from "@/constants/Colors";
+import { Spacing } from "@/constants/Spacing";
+import { Typography } from "@/constants/Typography";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../store";
-import { clearVehicleConfig } from "../store/vehicleSlice";
+import { RootState } from "@/store";
+import { clearVehicleConfig } from "@/store/vehicleSlice";
 
-import Header from "../components/Header";
+import Header from "@/components/Header";
 
-const slogan = require("../assets/images/auchan-slogan.jpg");
-const leftImage = require("../assets/images/auchan-recharge.jpg");
-const googlePlay = require("../assets/images/google-play.png");
+const slogan = require("@/assets/images/auchan-slogan.jpg");
+const leftImage = require("@/assets/images/auchan-recharge.jpg");
+const googlePlay = require("@/assets/images/google-play.png");
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
-  const isWeb = Platform.OS === "web";
-  const isTablet = width >= 1024;
-  const isSmallScreen = width < 450;
+  const { brand, model } = useSelector((state: RootState) => state.vehicle);
+
   const router = useRouter();
   const dispatch = useDispatch();
-  const { brand, model } = useSelector((state: RootState) => state.vehicle);
+
+  const isTablet = width >= 870;
+  const isSmallScreen = width < 450;
   const hasVehicleConfig = !!brand && !!model;
+  const apkUrl = "https://expo.dev/artifacts/eas/bqLow3TUfDwkZUCnMqJcFp.apk";
 
   const handleBrickPress = (product: string) => {
     if (hasVehicleConfig) {
@@ -59,8 +60,6 @@ export default function HomeScreen() {
         {isTablet && (
           <Pressable
             onPress={() => {
-              const apkUrl =
-                "https://expo.dev/artifacts/eas/bqLow3TUfDwkZUCnMqJcFp.apk";
               window.open(apkUrl, "_blank");
             }}
             style={styles.downloadButton}
@@ -72,6 +71,7 @@ export default function HomeScreen() {
             </View>
           </Pressable>
         )}
+
         {hasVehicleConfig && isTablet && (
           <Pressable
             onPress={() => dispatch(clearVehicleConfig())}
@@ -97,23 +97,24 @@ export default function HomeScreen() {
           minHeight: isTablet ? 150 : 120,
           maxHeight: isTablet ? 185 : 150,
         },
-        (item.name === "Lave-glaces (conseils)" ||
-          item.name === "Liquide de refroidissement (conseils)") &&
-          styles.greyBackground,
-        item.name === "" && styles.whiteBackground,
+        (item.id === 7 || item.id === 8) && styles.greyBackground,
+        item.id === 6 && styles.whiteBackground,
       ]}
       onPress={() => item.product && handleBrickPress(item.product)}
     >
-      <Text style={[styles.brickText, { fontSize: isSmallScreen ? 14 : 16 }]}>
+      <Text
+        style={[
+          styles.brickText,
+          {
+            fontSize: isSmallScreen
+              ? Typography.fontSize.sm
+              : Typography.fontSize.base,
+          },
+        ]}
+      >
         {item.name}
       </Text>
-      <Image
-        source={item.icon}
-        style={{
-          width: isSmallScreen ? 30 : 40,
-          height: isSmallScreen ? 30 : 40,
-        }}
-      />
+      <Image source={item.icon} style={styles.brickIcon} />
     </Pressable>
   );
 
@@ -138,8 +139,6 @@ export default function HomeScreen() {
 
       <Pressable
         onPress={() => {
-          const apkUrl =
-            "https://expo.dev/artifacts/eas/bqLow3TUfDwkZUCnMqJcFp.apk";
           window.open(apkUrl, "_blank");
         }}
         style={[
@@ -196,6 +195,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     borderRadius: 6,
     marginHorizontal: Spacing.lg - 1,
+    maxWidth: 390,
   },
   reinitializeText: {
     color: Colors.white,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: Spacing.md - 2, // 10
+    padding: Spacing.md - 2,
     flexDirection: "row",
     maxHeight: 600,
   },
@@ -263,10 +263,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: Typography.fontSize.lg,
     textAlign: "center",
-    marginBottom: Spacing.xs + 1,
+    marginBottom: Spacing.md + 1,
   },
   brickIcon: {
     resizeMode: "contain",
+    width: 40,
+    height: 40,
   },
   downloadButton: {
     flexDirection: "row",
@@ -282,6 +284,7 @@ const styles = StyleSheet.create({
   downloadImage: {
     width: 24,
     height: 24,
+    marginRight: Spacing.sm,
     resizeMode: "contain",
   },
   textContainer: {
@@ -290,11 +293,11 @@ const styles = StyleSheet.create({
   },
   downloadTextTop: {
     color: Colors.white,
-    fontSize: 12,
+    fontSize: Typography.fontSize.xs,
   },
   downloadTextBottom: {
     color: Colors.white,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
   },
 });

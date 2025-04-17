@@ -34,7 +34,7 @@ export default function Header({
             href="../"
             asChild
             style={{
-              width: isSmallScreen ? 100 : 140,
+              width: isSmallScreen ? 90 : 140,
             }}
           >
             <Pressable style={styles.navButton}>
@@ -62,7 +62,7 @@ export default function Header({
             href={"/"}
             asChild
             style={{
-              width: isSmallScreen ? 100 : 140,
+              width: isSmallScreen ? 90 : 140,
             }}
           >
             <Pressable style={styles.navButton}>
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     flexDirection: "row",
-    gap: Spacing.md,
+    gap: Spacing.xs,
   },
   logo: {
     width: 100,
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   navButton: {
     backgroundColor: Colors.primary,
-    paddingVertical: Spacing.sm,
+    paddingVertical: Spacing.xs,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
