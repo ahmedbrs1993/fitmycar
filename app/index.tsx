@@ -34,7 +34,7 @@ export default function HomeScreen() {
 
   const isTablet = width >= 870;
   const isSmallScreen = width < 450;
-  const hasVehicleConfig = !!brand && !!model;
+  const hasVehicleConfig = !!brand && !!model && !!generation && !!fuelType;
   const apkUrl = "https://expo.dev/artifacts/eas/bqLow3TUfDwkZUCnMqJcFp.apk";
 
   const handleBrickPress = (product: string) => {
