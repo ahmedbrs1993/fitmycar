@@ -11,7 +11,7 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { cars } from "@/data/cars";
+import { carData } from "@/data/cars";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
@@ -27,9 +27,9 @@ export default function BrandsScreen() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const isTablet = width >= 870;
-  const totalPages = Math.ceil(cars.length / BRANDS_PER_PAGE);
+  const totalPages = Math.ceil(carData.length / BRANDS_PER_PAGE);
 
-  const paginatedBrands = cars.slice(
+  const paginatedBrands = carData.slice(
     (currentPage - 1) * BRANDS_PER_PAGE,
     currentPage * BRANDS_PER_PAGE
   );
@@ -97,7 +97,7 @@ export default function BrandsScreen() {
                 href={{
                   pathname: "/models",
                   params: {
-                    product,
+                    product: product as string,
                     brand: brand.brand,
                   },
                 }}

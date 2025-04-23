@@ -25,7 +25,9 @@ const googlePlay = require("@/assets/images/google-play.png");
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
-  const { brand, model } = useSelector((state: RootState) => state.vehicle);
+  const { brand, model, generation, fuelType } = useSelector(
+    (state: RootState) => state.vehicle
+  );
 
   const router = useRouter();
   const dispatch = useDispatch();
@@ -37,7 +39,10 @@ export default function HomeScreen() {
 
   const handleBrickPress = (product: string) => {
     if (hasVehicleConfig) {
-      router.push({ pathname: "/products", params: { product, brand, model } });
+      router.push({
+        pathname: "/products",
+        params: { product, brand, model, generation, fuelType },
+      });
     } else {
       router.push({ pathname: "/brands", params: { product } });
     }
@@ -78,7 +83,7 @@ export default function HomeScreen() {
             style={styles.reinitializeButton}
           >
             <Text style={styles.reinitializeText}>
-              Réinitialiser véhicule : {brand} {model}
+              Réinitialiser véhicule : {brand} {model} {generation} {fuelType}
             </Text>
           </Pressable>
         )}
@@ -162,7 +167,7 @@ export default function HomeScreen() {
           style={styles.reinitializeButton}
         >
           <Text style={styles.reinitializeText}>
-            Réinitialiser véhicule : {brand} {model}
+            Réinitialiser véhicule : {brand} {model} {generation} {fuelType}
           </Text>
         </Pressable>
       )}

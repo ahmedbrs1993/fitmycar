@@ -9,7 +9,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, Link } from "expo-router";
 import { useState } from "react";
-import { cars } from "@/data/cars";
+import { carData } from "@/data/cars";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
@@ -22,9 +22,10 @@ const MODELS_PER_PAGE = 12;
 
 export default function ModelsScreen() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { product, brand } = useLocalSearchParams();
+  const { product, brand }: { product: string; brand: string } =
+    useLocalSearchParams();
 
-  const brandData = cars.find((item) => item.brand === brand);
+  const brandData = carData.find((item) => item.brand === brand);
 
   if (!brandData) {
     return (
@@ -34,8 +35,9 @@ export default function ModelsScreen() {
     );
   }
 
-  const totalPages = Math.ceil(brandData.models.length / MODELS_PER_PAGE);
-  const paginatedModels = brandData.models.slice(
+  const models = brandData.models;
+  const totalPages = Math.ceil(models.length / MODELS_PER_PAGE);
+  const paginatedModels = models.slice(
     (currentPage - 1) * MODELS_PER_PAGE,
     currentPage * MODELS_PER_PAGE
   );
@@ -56,20 +58,20 @@ export default function ModelsScreen() {
         {/* Models Grid - 3 per row */}
         <View style={styles.gridContainer}>
           {paginatedModels.map((model) => (
-            <View key={model} style={styles.modelContainer}>
+            <View key={model.name} style={styles.modelContainer}>
               <Link
                 href={{
-                  pathname: "/products",
+                  pathname: "/generations",
                   params: {
                     product,
                     brand,
-                    model,
+                    model: model.name,
                   },
                 }}
                 asChild
               >
                 <Pressable style={styles.modelItem}>
-                  <Text style={styles.modelText}>{model}</Text>
+                  <Text style={styles.modelText}>{model.name}</Text>
                 </Pressable>
               </Link>
             </View>

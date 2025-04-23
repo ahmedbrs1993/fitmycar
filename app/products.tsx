@@ -37,19 +37,21 @@ type ProductItem = {
 };
 
 export default function ProductsScreen() {
-  const { product, brand, model } = useLocalSearchParams<{
+  const { product, brand, model, generation, fuelType } = useLocalSearchParams<{
     product: ProductType;
-    brand?: string;
-    model?: string;
+    brand: string;
+    model: string;
+    generation: string;
+    fuelType: string;
   }>();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (brand && model) {
-      dispatch(setVehicleConfig({ brand, model }));
+      dispatch(setVehicleConfig({ brand, model, generation, fuelType }));
     }
-  }, [product, brand, model]);
+  }, [product, brand, model, generation, fuelType]);
 
   const allProducts: ProductItem[] = products[product] || [];
 
@@ -85,7 +87,10 @@ export default function ProductsScreen() {
               />
 
               <Text style={styles.vehicleBrand}>
-                {brand} <Text style={styles.vehicleModel}> {model}</Text>
+                {brand}{" "}
+                <Text style={styles.vehicleModel}>
+                  {model + " -"} {generation + " -"} {fuelType}
+                </Text>
               </Text>
             </View>
           </View>

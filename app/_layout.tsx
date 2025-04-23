@@ -41,6 +41,8 @@ export default function RootLayout() {
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="brands" options={{ headerShown: false }} />
           <Stack.Screen name="models" options={{ headerShown: false }} />
+          <Stack.Screen name="generations" options={{ headerShown: false }} />
+          <Stack.Screen name="fuelType" options={{ headerShown: false }} />
           <Stack.Screen name="products" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
