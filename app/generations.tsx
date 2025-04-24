@@ -12,11 +12,11 @@ import { useDispatch } from "react-redux";
 import { setVehicleConfig } from "@/store/vehicleSlice";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { carData } from "@/data/cars";
-
-import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+
+import Header from "@/components/Header";
 
 const chat = require("@/assets/images/chat.png");
 

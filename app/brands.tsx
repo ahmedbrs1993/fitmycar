@@ -6,11 +6,11 @@ import {
   StyleSheet,
   TextInput,
   useWindowDimensions,
+  ScrollView,
 } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { carData } from "@/data/cars";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";

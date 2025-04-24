@@ -11,10 +11,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { setSubProduct } from "@/store/productSlice";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Header from "@/components/Header";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+
+import Header from "@/components/Header";
 
 // Display name mapping
 const productDisplayNames: Record<string, string> = {
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     width: "100%",
     maxWidth: 200,
-    maxHeight: 200,
+    maxHeight: 170,
   },
   brickText: {
     color: Colors.black,

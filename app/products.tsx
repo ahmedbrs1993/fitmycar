@@ -8,16 +8,12 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { RootState } from "@/store";
-
 import { products } from "@/data/products";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Colors } from "@/constants/Colors";
-import { setVehicleConfig } from "@/store/vehicleSlice";
-import { useEffect } from "react";
-import type { ProductType } from "@/store/productSlice";
 
+import Ionicons from "@expo/vector-icons/Ionicons";
 import Header from "@/components/Header";
 
 export default function ProductsScreen() {
@@ -33,7 +29,6 @@ export default function ProductsScreen() {
     (state: RootState) => state.product
   );
 
-  console.log("veefv", vehicle);
   // Fallback to params if Redux is empty
   const brand = vehicle.brand || params.brand;
   const model = vehicle.model || params.model;
@@ -227,12 +222,12 @@ const styles = StyleSheet.create({
     width: "33%",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 10,
     paddingHorizontal: 15,
+    marginLeft: 15,
     borderRadius: 10,
   },
   brandModelSection: {
-    width: "67%",
+    width: "60%",
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 10,

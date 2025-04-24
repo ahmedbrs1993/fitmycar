@@ -15,15 +15,19 @@ import { Typography } from "../constants/Typography";
 interface HeaderProps {
   showBack?: boolean;
   showHome?: boolean;
+  isHome?: boolean;
 }
 
 const logo = require("../assets/images/auchan-logo.png");
+const googlePlay = require("@/assets/images/google-play.png");
 
 export default function Header({
   showBack = false,
   showHome = false,
+  isHome = false,
 }: HeaderProps) {
   const { width } = useWindowDimensions();
+  const apkUrl = "https://expo.dev/artifacts/eas/mN34bQomNmR3VEhbJ61TDm.apk";
   const isSmallScreen = width < 450;
 
   return (
@@ -85,6 +89,20 @@ export default function Header({
             </Pressable>
           </Link>
         )}
+        {isHome && (
+          <Pressable
+            onPress={() => {
+              window.open(apkUrl, "_blank");
+            }}
+            style={styles.downloadButton}
+          >
+            <Image source={googlePlay} style={styles.downloadImage} />
+            <View style={styles.textContainer}>
+              <Text style={styles.downloadTextTop}>Get it on</Text>
+              <Text style={styles.downloadTextBottom}>Google Play</Text>
+            </View>
+          </Pressable>
+        )}
       </View>
 
       <Image source={logo} style={styles.logo} resizeMode="contain" />
@@ -108,8 +126,8 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   logo: {
-    width: 100,
-    height: 40,
+    width: 140,
+    height: 80,
   },
   navButton: {
     backgroundColor: Colors.primary,
@@ -138,5 +156,33 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.xl,
     marginRight: Spacing.xs,
     color: Colors.white,
+  },
+  downloadButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "auto",
+    backgroundColor: Colors.black,
+    borderRadius: 6,
+    padding: Spacing.sm,
+    paddingHorizontal: Spacing.lg,
+  },
+  downloadImage: {
+    width: 24,
+    height: 24,
+    marginRight: Spacing.sm,
+    resizeMode: "contain",
+  },
+  textContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  downloadTextTop: {
+    color: Colors.white,
+    fontSize: Typography.fontSize.sm,
+  },
+  downloadTextBottom: {
+    color: Colors.white,
+    fontWeight: "bold",
+    fontSize: Typography.fontSize.base,
   },
 });

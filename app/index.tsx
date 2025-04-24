@@ -23,7 +23,6 @@ import Header from "@/components/Header";
 
 const slogan = require("@/assets/images/auchan-slogan.jpg");
 const leftImage = require("@/assets/images/auchan-recharge.jpg");
-const googlePlay = require("@/assets/images/google-play.png");
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
@@ -41,7 +40,6 @@ export default function HomeScreen() {
   const isTabletHome = width >= 870;
   const isSmallScreen = width < 450;
   const hasVehicleConfig = !!brand && !!model && !!generation && !!fuelType;
-  const apkUrl = "https://expo.dev/artifacts/eas/mN34bQomNmR3VEhbJ61TDm.apk";
 
   const handleBrickPress = (item: any) => {
     dispatch(setProduct(item.product));
@@ -70,21 +68,6 @@ export default function HomeScreen() {
 
       <View style={{ alignItems: "center", marginRight: Spacing.md }}>
         {/* APK Download Button */}
-        {isTabletHome && (
-          <Pressable
-            onPress={() => {
-              window.open(apkUrl, "_blank");
-            }}
-            style={styles.downloadButton}
-          >
-            <Image source={googlePlay} style={styles.downloadImage} />
-            <View style={styles.textContainer}>
-              <Text style={styles.downloadTextTop}>Get it on</Text>
-              <Text style={styles.downloadTextBottom}>Google Play</Text>
-            </View>
-          </Pressable>
-        )}
-
         {hasVehicleConfig && isTabletHome && (
           <Pressable
             onPress={() => dispatch(clearVehicleConfig())}
@@ -108,7 +91,7 @@ export default function HomeScreen() {
           width: isTabletHome ? "32%" : "48%",
           aspectRatio: 1,
           minHeight: isTabletHome ? 150 : 120,
-          maxHeight: isTabletHome ? 185 : 150,
+          maxHeight: isTabletHome ? 172 : 150,
         },
         (item.id === 7 || item.id === 8) && styles.greyBackground,
         item.id === 6 && styles.whiteBackground,
@@ -133,12 +116,8 @@ export default function HomeScreen() {
 
   const renderTabletLayout = () => (
     <View style={styles.content}>
-      <View style={[styles.leftContainer, { height: "100%" }]}>
-        <Image
-          source={leftImage}
-          style={[styles.leftImage, { aspectRatio: 1 }]}
-          resizeMode="cover"
-        />
+      <View style={styles.imageContainer}>
+        <Image source={leftImage} style={styles.image} />
       </View>
       <View style={styles.rightContainer}>{bricks.map(renderBrick)}</View>
     </View>
@@ -146,28 +125,9 @@ export default function HomeScreen() {
 
   const renderMobileLayout = () => (
     <View style={styles.contentMobile}>
-      <View style={styles.mobileImageContainer}>
-        <Image source={leftImage} style={styles.mobileImage} />
+      <View style={styles.imageContainer}>
+        <Image source={leftImage} style={styles.image} />
       </View>
-
-      <Pressable
-        onPress={() => {
-          window.open(apkUrl, "_blank");
-        }}
-        style={[
-          styles.downloadButton,
-          {
-            width: 200,
-            alignSelf: "center",
-          },
-        ]}
-      >
-        <Image source={googlePlay} style={styles.downloadImage} />
-        <View style={styles.textContainer}>
-          <Text style={styles.downloadTextTop}>Get it on</Text>
-          <Text style={styles.downloadTextBottom}>Google Play</Text>
-        </View>
-      </Pressable>
 
       {hasVehicleConfig && (
         <Pressable
@@ -186,7 +146,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Header />
+        <Header isHome={true} />
         {renderSloganSection()}
         {isTabletHome ? renderTabletLayout() : renderMobileLayout()}
       </ScrollView>
@@ -230,25 +190,17 @@ const styles = StyleSheet.create({
   contentMobile: {
     flexDirection: "column",
   },
-  leftContainer: {
-    flex: 1,
-    marginRight: Spacing.xl,
-    borderRadius: Spacing.md,
-    overflow: "hidden",
-  },
-  leftImage: {
+  image: {
     width: "100%",
     height: "100%",
+    aspectRatio: 1,
   },
-  mobileImageContainer: {
+  imageContainer: {
     flex: 1,
-    margin: Spacing.md,
+    marginHorizontal: Spacing.md,
+    paddingVertical: Spacing.md,
     borderRadius: Spacing.md,
     overflow: "hidden",
-  },
-  mobileImage: {
-    width: "100%",
-    height: "100%",
   },
   rightContainer: {
     flex: 1,
@@ -256,6 +208,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     marginHorizontal: Spacing.md,
+    paddingTop: 10,
     gap: Spacing.sm,
   },
   brick: {
@@ -282,35 +235,5 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: 40,
     height: 40,
-  },
-  downloadButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: Spacing.md,
-    width: 220,
-    height: "auto",
-    backgroundColor: Colors.black,
-    borderRadius: 6,
-    padding: Spacing.md - 2,
-  },
-  downloadImage: {
-    width: 24,
-    height: 24,
-    marginRight: Spacing.sm,
-    resizeMode: "contain",
-  },
-  textContainer: {
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  downloadTextTop: {
-    color: Colors.white,
-    fontSize: Typography.fontSize.xs,
-  },
-  downloadTextBottom: {
-    color: Colors.white,
-    fontWeight: "bold",
-    fontSize: Typography.fontSize.base,
   },
 });
