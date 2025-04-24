@@ -22,8 +22,7 @@ const MODELS_PER_PAGE = 12;
 
 export default function ModelsScreen() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { product, brand }: { product: string; brand: string } =
-    useLocalSearchParams();
+  const { brand }: { brand: string } = useLocalSearchParams();
 
   const brandData = carData.find((item) => item.brand === brand);
 
@@ -63,7 +62,6 @@ export default function ModelsScreen() {
                 href={{
                   pathname: "/generations",
                   params: {
-                    product,
                     brand,
                     model: model.name,
                   },
@@ -175,10 +173,9 @@ const styles = StyleSheet.create({
   paginationButton: {
     backgroundColor: Colors.primary,
     paddingVertical: Spacing.md,
-    paddingHorizontal: 25,
+    paddingHorizontal: Spacing.xl,
     borderRadius: 30,
-    marginHorizontal: 15,
-    minWidth: 120,
+    marginHorizontal: Spacing.lg,
     alignItems: "center",
   },
   disabledButton: {

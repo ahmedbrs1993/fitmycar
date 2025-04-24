@@ -16,6 +16,8 @@ import { Typography } from "@/constants/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
 import { clearVehicleConfig } from "@/store/vehicleSlice";
+import { setProduct, clearProduct } from "@/store/productSlice";
+import { useEffect } from "react";
 
 import Header from "@/components/Header";
 
@@ -32,19 +34,24 @@ export default function HomeScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const isTablet = width >= 870;
+  useEffect(() => {
+    dispatch(clearProduct());
+  }, []);
+
+  const isTabletHome = width >= 870;
   const isSmallScreen = width < 450;
   const hasVehicleConfig = !!brand && !!model && !!generation && !!fuelType;
-  const apkUrl = "https://expo.dev/artifacts/eas/bqLow3TUfDwkZUCnMqJcFp.apk";
+  const apkUrl = "https://expo.dev/artifacts/eas/mN34bQomNmR3VEhbJ61TDm.apk";
 
-  const handleBrickPress = (product: string) => {
-    if (hasVehicleConfig) {
-      router.push({
-        pathname: "/products",
-        params: { product, brand, model, generation, fuelType },
-      });
+  const handleBrickPress = (item: any) => {
+    dispatch(setProduct(item.product));
+
+    if (item.subProducts) {
+      router.push("/subProduct");
+    } else if (hasVehicleConfig) {
+      router.push("/products");
     } else {
-      router.push({ pathname: "/brands", params: { product } });
+      router.push("/brands");
     }
   };
 
@@ -60,9 +67,10 @@ export default function HomeScreen() {
         }}
         resizeMode="contain"
       />
+
       <View style={{ alignItems: "center", marginRight: Spacing.md }}>
         {/* APK Download Button */}
-        {isTablet && (
+        {isTabletHome && (
           <Pressable
             onPress={() => {
               window.open(apkUrl, "_blank");
@@ -77,7 +85,7 @@ export default function HomeScreen() {
           </Pressable>
         )}
 
-        {hasVehicleConfig && isTablet && (
+        {hasVehicleConfig && isTabletHome && (
           <Pressable
             onPress={() => dispatch(clearVehicleConfig())}
             style={styles.reinitializeButton}
@@ -97,15 +105,15 @@ export default function HomeScreen() {
       style={[
         styles.brick,
         {
-          width: isTablet ? "32%" : "48%",
+          width: isTabletHome ? "32%" : "48%",
           aspectRatio: 1,
-          minHeight: isTablet ? 150 : 120,
-          maxHeight: isTablet ? 185 : 150,
+          minHeight: isTabletHome ? 150 : 120,
+          maxHeight: isTabletHome ? 185 : 150,
         },
         (item.id === 7 || item.id === 8) && styles.greyBackground,
         item.id === 6 && styles.whiteBackground,
       ]}
-      onPress={() => item.product && handleBrickPress(item.product)}
+      onPress={() => item.product && handleBrickPress(item)}
     >
       <Text
         style={[
@@ -164,7 +172,7 @@ export default function HomeScreen() {
       {hasVehicleConfig && (
         <Pressable
           onPress={() => dispatch(clearVehicleConfig())}
-          style={styles.reinitializeButton}
+          style={[styles.reinitializeButton, { marginBottom: 10 }]}
         >
           <Text style={styles.reinitializeText}>
             Réinitialiser véhicule : {brand} {model} {generation} {fuelType}
@@ -180,7 +188,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Header />
         {renderSloganSection()}
-        {isTablet ? renderTabletLayout() : renderMobileLayout()}
+        {isTabletHome ? renderTabletLayout() : renderMobileLayout()}
       </ScrollView>
     </SafeAreaView>
   );
@@ -247,7 +255,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    margin: Spacing.md,
+    marginHorizontal: Spacing.md,
     gap: Spacing.sm,
   },
   brick: {

@@ -21,11 +21,8 @@ import { Typography } from "@/constants/Typography";
 const chat = require("@/assets/images/chat.png");
 
 export default function GenerationsScreen() {
-  const {
-    brand,
-    model,
-    product,
-  }: { brand: string; model: string; product: string } = useLocalSearchParams();
+  const { brand, model }: { brand: string; model: string } =
+    useLocalSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -46,7 +43,6 @@ export default function GenerationsScreen() {
       params: {
         brand,
         model,
-        product,
         generation,
       },
     });

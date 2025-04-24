@@ -20,7 +20,7 @@ import { Typography } from "@/constants/Typography";
 const chat = require("@/assets/images/chat.png");
 
 export default function FuelTypeScreen() {
-  const { brand, model, generation, product } = useLocalSearchParams();
+  const { brand, model, generation } = useLocalSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -53,7 +53,6 @@ export default function FuelTypeScreen() {
         model,
         generation,
         fuelType: type,
-        product,
       },
     });
   };

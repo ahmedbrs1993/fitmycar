@@ -9,51 +9,38 @@ import {
 import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { RootState } from "@/store";
 
 import { products } from "@/data/products";
+import { useSelector, useDispatch } from "react-redux";
 import { Colors } from "@/constants/Colors";
-import { useDispatch } from "react-redux";
 import { setVehicleConfig } from "@/store/vehicleSlice";
 import { useEffect } from "react";
+import type { ProductType } from "@/store/productSlice";
 
 import Header from "@/components/Header";
 
-type ProductType =
-  | "balais"
-  | "eclairage"
-  | "batteries"
-  | "huiles-moteur"
-  | "filtres"
-  | "lave-glaces"
-  | "liquide-refroidissement";
-
-type ProductItem = {
-  id: number;
-  name: string;
-  brand: string;
-  price: string;
-  image: any;
-  specs: string[];
-};
-
 export default function ProductsScreen() {
-  const { product, brand, model, generation, fuelType } = useLocalSearchParams<{
-    product: ProductType;
+  const params = useLocalSearchParams<{
     brand: string;
     model: string;
     generation: string;
     fuelType: string;
   }>();
 
-  const dispatch = useDispatch();
+  const vehicle = useSelector((state: RootState) => state.vehicle);
+  const { product, subProduct } = useSelector(
+    (state: RootState) => state.product
+  );
 
-  useEffect(() => {
-    if (brand && model) {
-      dispatch(setVehicleConfig({ brand, model, generation, fuelType }));
-    }
-  }, [product, brand, model, generation, fuelType]);
+  console.log("veefv", vehicle);
+  // Fallback to params if Redux is empty
+  const brand = vehicle.brand || params.brand;
+  const model = vehicle.model || params.model;
+  const generation = vehicle.generation || params.generation;
+  const fuelType = vehicle.fuelType || params.fuelType;
 
-  const allProducts: ProductItem[] = products[product] || [];
+  const allProducts = products[product as keyof typeof products] || [];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,7 +58,12 @@ export default function ProductsScreen() {
                 style={styles.icon}
               />
               <Text style={styles.highlightedText}>
-                {product.charAt(0).toUpperCase() + product.slice(1)}
+                {product && product.charAt(0).toUpperCase() + product.slice(1)}
+                {subProduct
+                  ? " - " +
+                    subProduct.charAt(0).toUpperCase() +
+                    subProduct.slice(1)
+                  : ""}
               </Text>
             </View>
           </View>
@@ -236,6 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 10,
+    paddingHorizontal: 15,
     borderRadius: 10,
   },
   brandModelSection: {
@@ -243,6 +236,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingVertical: 10,
+    paddingHorizontal: 15,
     borderRadius: 10,
   },
   sectionTitle: {

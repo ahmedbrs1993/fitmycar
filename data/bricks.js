@@ -21,13 +21,15 @@ export const bricks = [
     id: 4,
     name: "Huiles moteur",
     icon: require("../assets/images/huiles-moteur.jpg"),
-    product: "huiles-moteur"
+    product: "huiles-moteur",
+    subProducts: ["Vidange", "Appoint"],
   },
   {
     id: 5,
     name: "Filtres et accessoires",
     icon: require("../assets/images/filtres.png"),
-    product: "filtres"
+    product: "filtres",
+    subProducts: ["Joints et bouchons", "Filtres à huile"],
   },
   {
     id: 6,

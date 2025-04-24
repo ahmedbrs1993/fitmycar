@@ -23,10 +23,9 @@ const BRANDS_PER_PAGE = 12;
 
 export default function BrandsScreen() {
   const { width } = useWindowDimensions();
-  const { product } = useLocalSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const isTablet = width >= 870;
+  const isTablet = width >= 750;
   const totalPages = Math.ceil(carData.length / BRANDS_PER_PAGE);
 
   const paginatedBrands = carData.slice(
@@ -97,7 +96,6 @@ export default function BrandsScreen() {
                 href={{
                   pathname: "/models",
                   params: {
-                    product: product as string,
                     brand: brand.brand,
                   },
                 }}
