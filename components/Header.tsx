@@ -11,6 +11,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Colors } from "../constants/Colors";
 import { Spacing } from "../constants/Spacing";
 import { Typography } from "../constants/Typography";
+import { Platform } from "react-native";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -20,6 +21,8 @@ interface HeaderProps {
 
 const logo = require("../assets/images/auchan-logo.png");
 const googlePlay = require("@/assets/images/google-play.png");
+const TABLET_MIN_WIDTH = 870;
+const SMALL_SCREEN_WIDTH = 450;
 
 export default function Header({
   showBack = false,
@@ -27,8 +30,9 @@ export default function Header({
   isHome = false,
 }: HeaderProps) {
   const { width } = useWindowDimensions();
-  const apkUrl = "https://expo.dev/artifacts/eas/mN34bQomNmR3VEhbJ61TDm.apk";
-  const isSmallScreen = width < 450;
+  const apkUrl = "https://expo.dev/artifacts/eas/5pWZibpMLaEgjw9EZw6nG2.apk";
+  const isSmallScreen = width < SMALL_SCREEN_WIDTH;
+  const isTablet = width >= TABLET_MIN_WIDTH;
 
   return (
     <View style={styles.container}>
@@ -89,7 +93,7 @@ export default function Header({
             </Pressable>
           </Link>
         )}
-        {isHome && (
+        {isHome && Platform.OS === "web" && (
           <Pressable
             onPress={() => {
               window.open(apkUrl, "_blank");
@@ -126,8 +130,8 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
   },
   logo: {
-    width: 140,
-    height: 80,
+    width: 150,
+    height: 60,
   },
   navButton: {
     backgroundColor: Colors.primary,
@@ -160,11 +164,12 @@ const styles = StyleSheet.create({
   downloadButton: {
     flexDirection: "row",
     alignItems: "center",
-    width: "auto",
+    justifyContent: "center",
     backgroundColor: Colors.black,
+    width: 220,
+    padding: Spacing.md,
+    paddingHorizontal: Spacing.xl,
     borderRadius: 6,
-    padding: Spacing.sm,
-    paddingHorizontal: Spacing.lg,
   },
   downloadImage: {
     width: 24,

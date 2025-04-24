@@ -40,6 +40,8 @@ const subOptions: Record<string, string[]> = {
   "Filtres et accessoires": ["Joints et bouchons", "Filtres à huile"],
 };
 
+const TABLET_MIN_WIDTH = 870;
+
 export default function SubProductScreen() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -52,7 +54,7 @@ export default function SubProductScreen() {
   const hasVehicleConfig = !!brand && !!model && !!generation && !!fuelType;
 
   const displayName = product ? productDisplayNames[product] : "";
-  const isTablet = width >= 870;
+  const isTablet = width >= TABLET_MIN_WIDTH;
 
   if (!product || !displayName) return null;
 

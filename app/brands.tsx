@@ -8,7 +8,7 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState } from "react";
 import { carData } from "@/data/cars";
@@ -20,12 +20,13 @@ import Header from "@/components/Header";
 
 const chat = require("@/assets/images/chat.png");
 const BRANDS_PER_PAGE = 12;
+const TABLET_MIN_WIDTH = 750;
 
 export default function BrandsScreen() {
   const { width } = useWindowDimensions();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const isTablet = width >= 750;
+  const isTablet = width >= TABLET_MIN_WIDTH;
   const totalPages = Math.ceil(carData.length / BRANDS_PER_PAGE);
 
   const paginatedBrands = carData.slice(

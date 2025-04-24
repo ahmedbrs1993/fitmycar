@@ -23,27 +23,30 @@ import Header from "@/components/Header";
 
 const slogan = require("@/assets/images/auchan-slogan.jpg");
 const leftImage = require("@/assets/images/auchan-recharge.jpg");
+const TABLET_MIN_WIDTH = 870;
+const SMALL_SCREEN_WIDTH = 450;
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const product = useSelector((state: RootState) => state.product);
   const { brand, model, generation, fuelType } = useSelector(
     (state: RootState) => state.vehicle
   );
 
-  const router = useRouter();
-  const dispatch = useDispatch();
+  const isTablet = width >= TABLET_MIN_WIDTH;
+  const isSmallScreen = width < SMALL_SCREEN_WIDTH;
+  const hasVehicleConfig = !!brand && !!model && !!generation && !!fuelType;
 
   useEffect(() => {
-    dispatch(clearProduct());
+    if (product) {
+      dispatch(clearProduct());
+    }
   }, []);
-
-  const isTabletHome = width >= 870;
-  const isSmallScreen = width < 450;
-  const hasVehicleConfig = !!brand && !!model && !!generation && !!fuelType;
 
   const handleBrickPress = (item: any) => {
     dispatch(setProduct(item.product));
-
     if (item.subProducts) {
       router.push("/subProduct");
     } else if (hasVehicleConfig) {
@@ -53,66 +56,65 @@ export default function HomeScreen() {
     }
   };
 
-  const renderSloganSection = () => (
-    <View style={styles.sloganContainer}>
-      <Image
-        source={slogan}
-        style={{
-          width: isSmallScreen ? width * 0.7 : width * 0.4,
-          height: isSmallScreen
-            ? width * 0.7 * (80 / 400)
-            : width * 0.4 * (80 / 400),
-        }}
-        resizeMode="contain"
-      />
+  const renderBrick = (item: (typeof bricks)[0], index: number) => {
+    const dynamicStyle = isTablet ? styles.brickTablet : styles.brickMobile;
+    const backgroundStyle =
+      item.id === 6
+        ? styles.whiteBackground
+        : item.id === 7 || item.id === 8
+        ? styles.greyBackground
+        : styles.primaryBackground;
 
-      <View style={{ alignItems: "center", marginRight: Spacing.md }}>
-        {/* APK Download Button */}
-        {hasVehicleConfig && isTabletHome && (
-          <Pressable
-            onPress={() => dispatch(clearVehicleConfig())}
-            style={styles.reinitializeButton}
-          >
-            <Text style={styles.reinitializeText}>
-              Réinitialiser véhicule : {brand} {model} {generation} {fuelType}
-            </Text>
-          </Pressable>
-        )}
-      </View>
-    </View>
-  );
+    const textSize = isSmallScreen
+      ? styles.brickTextSmall
+      : styles.brickTextBase;
 
-  const renderBrick = (item: (typeof bricks)[0], index: number) => (
-    <Pressable
-      key={index}
-      style={[
-        styles.brick,
-        {
-          width: isTabletHome ? "32%" : "48%",
-          aspectRatio: 1,
-          minHeight: isTabletHome ? 150 : 120,
-          maxHeight: isTabletHome ? 172 : 150,
-        },
-        (item.id === 7 || item.id === 8) && styles.greyBackground,
-        item.id === 6 && styles.whiteBackground,
-      ]}
-      onPress={() => item.product && handleBrickPress(item)}
-    >
-      <Text
-        style={[
-          styles.brickText,
-          {
-            fontSize: isSmallScreen
-              ? Typography.fontSize.sm
-              : Typography.fontSize.base,
-          },
-        ]}
+    return (
+      <Pressable
+        key={index}
+        style={[styles.brickBase, dynamicStyle, backgroundStyle]}
+        onPress={() => item.product && handleBrickPress(item)}
       >
-        {item.name}
-      </Text>
-      <Image source={item.icon} style={styles.brickIcon} />
-    </Pressable>
-  );
+        <Text style={[styles.brickText, textSize]}>{item.name}</Text>
+        <Image source={item.icon} style={styles.brickIcon} />
+      </Pressable>
+    );
+  };
+
+  const renderSloganSection = () => {
+    const sloganWidth = isSmallScreen ? width * 0.7 : width * 0.4;
+    const sloganHeight = sloganWidth * (80 / 400);
+    return (
+      <View style={styles.sloganContainer}>
+        <Image
+          source={slogan}
+          style={[
+            styles.sloganImage,
+            { width: sloganWidth, height: sloganHeight },
+          ]}
+        />
+        <View style={styles.sloganRight}>
+          {isTablet && (
+            <Pressable
+              onPress={() => {
+                window.open("", "_blank");
+              }}
+            ></Pressable>
+          )}
+          {hasVehicleConfig && isTablet && (
+            <Pressable
+              onPress={() => dispatch(clearVehicleConfig())}
+              style={styles.reinitializeButton}
+            >
+              <Text style={styles.reinitializeText}>
+                Réinitialiser véhicule : {brand} {model} {generation} {fuelType}
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      </View>
+    );
+  };
 
   const renderTabletLayout = () => (
     <View style={styles.content}>
@@ -148,7 +150,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Header isHome={true} />
         {renderSloganSection()}
-        {isTabletHome ? renderTabletLayout() : renderMobileLayout()}
+        {isTablet ? renderTabletLayout() : renderMobileLayout()}
       </ScrollView>
     </SafeAreaView>
   );
@@ -181,6 +183,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     backgroundColor: Colors.white,
   },
+  sloganImage: {
+    resizeMode: "contain",
+  },
+  sloganRight: {
+    alignItems: "center",
+    marginRight: Spacing.md,
+  },
   content: {
     flex: 1,
     padding: Spacing.md - 2,
@@ -211,12 +220,26 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     gap: Spacing.sm,
   },
-  brick: {
-    backgroundColor: Colors.primary,
+  brickBase: {
     borderRadius: Spacing.xs + 1,
     alignItems: "center",
     justifyContent: "center",
     padding: Spacing.sm,
+  },
+  brickTablet: {
+    width: "32%",
+    aspectRatio: 1,
+    minHeight: 150,
+    maxHeight: 172,
+  },
+  brickMobile: {
+    width: "48%",
+    aspectRatio: 1,
+    minHeight: 120,
+    maxHeight: 150,
+  },
+  primaryBackground: {
+    backgroundColor: Colors.primary,
   },
   greyBackground: {
     backgroundColor: Colors.grey,
@@ -227,9 +250,14 @@ const styles = StyleSheet.create({
   brickText: {
     color: Colors.black,
     fontWeight: "bold",
-    fontSize: Typography.fontSize.lg,
     textAlign: "center",
     marginBottom: Spacing.md + 1,
+  },
+  brickTextSmall: {
+    fontSize: Typography.fontSize.sm,
+  },
+  brickTextBase: {
+    fontSize: Typography.fontSize.base,
   },
   brickIcon: {
     resizeMode: "contain",
