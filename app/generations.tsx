@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,55 +11,82 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { setVehicleConfig } from "@/store/vehicleSlice";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { carData } from "@/data/cars";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+import { API_BASE_URL_API } from "@/constants/api";
 
 import Header from "@/components/Header";
 
 const chat = require("@/assets/images/chat.png");
 
+type Generation = {
+  id: number;
+  name: string;
+};
+
 export default function GenerationsScreen() {
-  const { brand, model }: { brand: string; model: string } =
-    useLocalSearchParams();
+  const { modelId, modelName, brandName }: any = useLocalSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const brandData = carData.find((item) => item.brand === brand);
-  const modelData = brandData?.models.find((item) => item.name === model);
+  const [generations, setGenerations] = useState<Generation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const handleSelect = (generation: string) => {
+  useEffect(() => {
+    const fetchGenerations = async () => {
+      try {
+        const res = await fetch(
+          `${API_BASE_URL_API}/generations?model=/api/models/${modelId}`,
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        setGenerations(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Erreur lors du chargement des générations:", err);
+        setError("Erreur lors du chargement des générations.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (modelId) fetchGenerations();
+  }, [modelId]);
+
+  const handleSelect = (generation: Generation) => {
     dispatch(
       setVehicleConfig({
-        brand,
-        model,
-        generation,
+        brand: brandName,
+        model: modelName,
+        generation: generation.name,
         fuelType: "",
       })
     );
     router.push({
       pathname: "/fuelType",
       params: {
-        brand,
-        model,
-        generation,
+        generationId: generation.id,
+        brandName,
+        modelName,
+        generationName: generation.name,
       },
     });
   };
 
-  if (!modelData) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text>Model not found</Text>
-      </SafeAreaView>
-    );
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Header showBack={true} showHome={true} />
+        <Header showBack showHome />
 
         <View style={styles.instructionContainer}>
           <Image source={chat} style={styles.chat} resizeMode="contain" />
@@ -68,39 +95,37 @@ export default function GenerationsScreen() {
           </Text>
         </View>
 
-        <View style={styles.gridContainer}>
-          {modelData.generations.map((generation) => (
-            <Pressable
-              key={generation}
-              onPress={() => handleSelect(generation)}
-              style={styles.generationItem}
-            >
-              <Text style={styles.generationText}>{generation}</Text>
-            </Pressable>
-          ))}
-        </View>
+        {loading ? (
+          <Text style={{ textAlign: "center" }}>Chargement...</Text>
+        ) : error ? (
+          <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
+        ) : (
+          <View style={styles.gridContainer}>
+            {generations.map((generation) => (
+              <Pressable
+                key={generation.id}
+                onPress={() => handleSelect(generation)}
+                style={styles.generationItem}
+              >
+                <Text style={styles.generationText}>{generation.name}</Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
+  container: { flex: 1, backgroundColor: Colors.white },
+  scrollContainer: { flexGrow: 1 },
   instructionContainer: {
     padding: Spacing.md,
     width: "100%",
     alignItems: "center",
   },
-  chat: {
-    width: 100,
-    height: 40,
-  },
+  chat: { width: 100, height: 40 },
   instructionText: {
     color: Colors.red,
     fontSize: Typography.fontSize.base,

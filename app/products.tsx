@@ -5,23 +5,41 @@ import {
   ScrollView,
   Pressable,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { RootState } from "@/store";
-import { products } from "@/data/products";
 import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 import { Colors } from "@/constants/Colors";
-
+import { useEffect, useState } from "react";
+import { API_BASE_URL, API_BASE_URL_API } from "@/constants/api";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Header from "@/components/Header";
+
+export type Product = {
+  id: number;
+  name: string;
+  brand: string;
+  image: string;
+  price: number;
+  specs: string[];
+  category: string;
+};
+
+export type ProductCompatibility = {
+  id: number;
+  fuelType: string; // or possibly an object if expanded
+  product: Product;
+};
 
 export default function ProductsScreen() {
   const params = useLocalSearchParams<{
     brand: string;
     model: string;
     generation: string;
-    fuelType: string;
+    fuelTypeId: string;
+    fuelTypeName: string;
   }>();
 
   const vehicle = useSelector((state: RootState) => state.vehicle);
@@ -29,31 +47,61 @@ export default function ProductsScreen() {
     (state: RootState) => state.product
   );
 
-  // Fallback to params if Redux is empty
   const brand = vehicle.brand || params.brand;
   const model = vehicle.model || params.model;
   const generation = vehicle.generation || params.generation;
-  const fuelType = vehicle.fuelType || params.fuelType;
+  const fuelType = vehicle.fuelType || params.fuelTypeName;
+  const fuelTypeId = params.fuelTypeId;
 
-  const allProducts = products[product as keyof typeof products] || [];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          `${API_BASE_URL_API}/product_compatibilities?fuelType=/api/fuel_types/${fuelTypeId}`,
+          {
+            headers: { Accept: "application/json" },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data: ProductCompatibility[] = await res.json();
+
+        const filtered: Product[] = data
+          .map((compatibility) => compatibility.product)
+          .filter((product) => product?.category === "balais");
+
+        setProducts(filtered);
+      } catch (err) {
+        console.error("Erreur lors du chargement des produits:", err);
+        setError("Impossible de charger les produits.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (fuelTypeId) fetchProducts();
+  }, [fuelTypeId]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header showBack={true} showHome={true} />
+      <Header showBack showHome />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Product Type, Brand and Model Row */}
+        {/* Product Type and Vehicle Info */}
         <View style={styles.topRowContainer}>
-          {/* Product Section */}
           <View style={styles.productSection}>
             <View style={styles.iconTextRow}>
-              <Ionicons
-                name="checkmark"
-                size={22}
-                color="#4CAF50"
-                style={styles.icon}
-              />
+              <Ionicons name="checkmark" size={22} color="#4CAF50" />
               <Text style={styles.highlightedText}>
-                {product && product.charAt(0).toUpperCase() + product.slice(1)}
+                {product
+                  ? product.charAt(0).toUpperCase() + product.slice(1)
+                  : ""}
                 {subProduct
                   ? " - " +
                     subProduct.charAt(0).toUpperCase() +
@@ -62,100 +110,108 @@ export default function ProductsScreen() {
               </Text>
             </View>
           </View>
-
-          {/* Brand + Model Section */}
           <View style={styles.brandModelSection}>
             <View style={styles.iconTextRow}>
-              <Ionicons
-                name="car"
-                size={22}
-                color="#4CAF50"
-                style={styles.icon}
-              />
-
+              <Ionicons name="car" size={22} color="#4CAF50" />
               <Text style={styles.vehicleBrand}>
                 {brand}{" "}
                 <Text style={styles.vehicleModel}>
-                  {model + " -"} {generation + " -"} {fuelType}
+                  {model + " - "} {generation + " - "} {fuelType}
                 </Text>
               </Text>
             </View>
           </View>
         </View>
 
-        {/* Results Title */}
+        {/* Results */}
         <View style={styles.resultsTitleContainer}>
           <Text style={styles.resultsTitle}>Résultats de votre recherche</Text>
         </View>
 
-        {/* Products List */}
-        <View style={styles.productsContainer}>
-          {allProducts.map((item) => (
-            <Pressable key={item.id} style={styles.productCard}>
-              <Image
-                source={item.image}
-                style={styles.productImage}
-                resizeMode="contain"
-              />
-              <View style={styles.productDetails}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productBrand}>{item.brand}</Text>
-                <Text style={styles.productPrice}>{item.price}</Text>
-                <View style={styles.specsContainer}>
-                  {item.specs.map((spec, i) => (
-                    <Text key={i} style={styles.specText}>
-                      • {spec}
-                    </Text>
-                  ))}
+        {loading ? (
+          <ActivityIndicator size="large" color={Colors.primary} />
+        ) : error ? (
+          <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
+        ) : (
+          <View style={styles.productsContainer}>
+            {products.map((item) => (
+              <Pressable key={item.id} style={styles.productCard}>
+                <Image
+                  source={{
+                    uri: `${API_BASE_URL}/images/products/${item.image}`,
+                  }}
+                  style={styles.productImage}
+                  resizeMode="contain"
+                />
+                <View style={styles.productDetails}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productBrand}>{item.brand}</Text>
+                  <Text style={styles.productPrice}>
+                    {item.price.toFixed(2)} €
+                  </Text>
+                  {item.specs && (
+                    <Text style={styles.specText}>{item.specs}</Text>
+                  )}
                 </View>
-              </View>
-            </Pressable>
-          ))}
-        </View>
+              </Pressable>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
-  productType: {
-    fontSize: 24,
-    flex: 1,
-  },
-  iconTextRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  icon: {
-    marginRight: 6,
-  },
-  productTypeHighlight: {
-    color: Colors.primary,
-    fontWeight: "bold",
-  },
-  brandModelContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-    justifyContent: "center",
-  },
-  resultsTitleContainer: {
-    marginBottom: 16,
-  },
+  // (same styles you had, no need to repeat unless you want improvements)
+  container: { flex: 1, backgroundColor: Colors.white },
+  scrollContainer: { flexGrow: 1 },
+  resultsTitleContainer: { marginBottom: 16 },
   resultsTitle: {
     fontSize: 20,
     fontWeight: "bold",
     color: Colors.red,
     textAlign: "center",
     paddingBottom: 8,
+  },
+  topRowContainer: {
+    flexDirection: "row",
+    width: "100%",
+    marginBottom: 20,
+  },
+  productSection: {
+    width: "33%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 15,
+    marginLeft: 15,
+    borderRadius: 10,
+  },
+  brandModelSection: {
+    width: "60%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 10,
+  },
+  iconTextRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  highlightedText: {
+    color: Colors.primary,
+    fontWeight: "bold",
+    marginLeft: 6,
+  },
+  vehicleBrand: {
+    fontWeight: "bold",
+    color: Colors.black,
+  },
+  vehicleModel: {
+    color: Colors.darkGrey,
+    fontWeight: "bold",
   },
   productsContainer: {
     flexDirection: "row",
@@ -205,56 +261,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     textAlign: "center",
   },
-  specsContainer: {
-    marginTop: 8,
-  },
   specText: {
     fontSize: 14,
     color: Colors.darkGrey,
     lineHeight: 18,
-  },
-  topRowContainer: {
-    flexDirection: "row",
-    width: "100%",
-    marginBottom: 20,
-  },
-  productSection: {
-    width: "33%",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 15,
-    marginLeft: 15,
-    borderRadius: 10,
-  },
-  brandModelSection: {
-    width: "60%",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderRadius: 10,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: Colors.darkGrey,
     textAlign: "center",
-  },
-  highlightedText: {
-    color: Colors.primary,
-    fontWeight: "bold",
-  },
-  vehicleBrand: {
-    fontWeight: "bold",
-    color: Colors.black,
-  },
-  vehicleModel: {
-    color: Colors.darkGrey,
-    fontWeight: "bold",
-  },
-  brandModelRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    flexShrink: 1,
   },
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,49 +11,81 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { setVehicleConfig } from "@/store/vehicleSlice";
-import { carData } from "@/data/cars";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+import { API_BASE_URL_API } from "@/constants/api";
 
 import Header from "@/components/Header";
 
 const chat = require("@/assets/images/chat.png");
 
+type FuelType = {
+  id: number;
+  fuel: string;
+  generation: string;
+  modelName?: string;
+  brandName?: string;
+  fuelName?: string;
+};
+
 export default function FuelTypeScreen() {
-  const { brand, model, generation } = useLocalSearchParams();
+  const { generationId, brandName, modelName, generationName }: any =
+    useLocalSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const brandData = carData.find((b) => b.brand === brand);
-  const modelData = brandData?.models.find((m) => m.name === model);
-  const fuelTypes: string[] = modelData?.fuelType || [];
+  const [fuelTypes, setFuelTypes] = useState<FuelType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  if (!modelData || !fuelTypes.length) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>Fuel types not found</Text>
-      </SafeAreaView>
-    );
-  }
+  useEffect(() => {
+    const fetchFuelTypes = async () => {
+      try {
+        const res = await fetch(
+          `${API_BASE_URL_API}/fuel_types?generation=/api/generations/${generationId}`,
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
 
-  const handleFuelTypeSelect = (type: string) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        setFuelTypes(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Erreur lors du chargement des types de carburant:", err);
+        setError("Impossible de charger les types de carburant.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (generationId) fetchFuelTypes();
+  }, [generationId]);
+
+  const handleFuelTypeSelect = (fuel: FuelType) => {
     dispatch(
       setVehicleConfig({
-        brand: brand as string,
-        model: model as string,
-        generation: generation as string,
-        fuelType: type,
+        brand: brandName,
+        model: modelName,
+        generation: generationName,
+        fuelType: fuel.fuelName || "Inconnu",
       })
     );
 
     router.push({
       pathname: "/products",
       params: {
-        brand,
-        model,
-        generation,
-        fuelType: type,
+        brand: brandName,
+        model: modelName,
+        generation: generationName,
+        fuelTypeId: fuel.id,
+        fuelTypeName: fuel.fuelName,
       },
     });
   };
@@ -61,7 +93,7 @@ export default function FuelTypeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Header showBack={true} showHome={true} />
+        <Header showBack showHome />
 
         <View style={styles.instructionContainer}>
           <Image source={chat} style={styles.chat} resizeMode="contain" />
@@ -70,30 +102,33 @@ export default function FuelTypeScreen() {
           </Text>
         </View>
 
-        <View style={styles.gridContainer}>
-          {fuelTypes.map((type) => (
-            <Pressable
-              key={type}
-              style={styles.fuelItem}
-              onPress={() => handleFuelTypeSelect(type)}
-            >
-              <Text style={styles.fuelText}>{type}</Text>
-            </Pressable>
-          ))}
-        </View>
+        {loading ? (
+          <Text style={{ textAlign: "center" }}>Chargement...</Text>
+        ) : error ? (
+          <Text style={styles.errorText}>{error}</Text>
+        ) : (
+          <View style={styles.gridContainer}>
+            {fuelTypes.map((fuel) => (
+              <Pressable
+                key={fuel.id}
+                style={styles.fuelItem}
+                onPress={() => handleFuelTypeSelect(fuel)}
+              >
+                <Text style={styles.fuelText}>
+                  {fuel.fuelName || "Type inconnu"}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.white,
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
+  container: { flex: 1, backgroundColor: Colors.white },
+  scrollContainer: { flexGrow: 1 },
   instructionContainer: {
     padding: Spacing.md,
     alignItems: "center",

@@ -8,13 +8,13 @@ import {
   useWindowDimensions,
   ScrollView,
 } from "react-native";
+import { useEffect, useState } from "react";
 import { Link } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useState } from "react";
-import { carData } from "@/data/cars";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+import { API_BASE_URL_API } from "@/constants/api";
 
 import Header from "@/components/Header";
 
@@ -22,14 +22,46 @@ const chat = require("@/assets/images/chat.png");
 const BRANDS_PER_PAGE = 12;
 const TABLET_MIN_WIDTH = 750;
 
+type Brand = {
+  id: number;
+  name: string;
+};
+
 export default function BrandsScreen() {
   const { width } = useWindowDimensions();
   const [currentPage, setCurrentPage] = useState(1);
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL_API}/brands`, {
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        setBrands(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Error fetching brands:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBrands();
+  }, []);
 
   const isTablet = width >= TABLET_MIN_WIDTH;
-  const totalPages = Math.ceil(carData.length / BRANDS_PER_PAGE);
+  const totalPages = Math.ceil(brands.length / BRANDS_PER_PAGE);
 
-  const paginatedBrands = carData.slice(
+  const paginatedBrands = brands.slice(
     (currentPage - 1) * BRANDS_PER_PAGE,
     currentPage * BRANDS_PER_PAGE
   );
@@ -90,25 +122,32 @@ export default function BrandsScreen() {
         </View>
 
         {/* Brands Grid - 3 per row */}
-        <View style={styles.gridContainer}>
-          {paginatedBrands.map((brand, index) => (
-            <View key={brand.brand} style={styles.brandContainer}>
-              <Link
-                href={{
-                  pathname: "/models",
-                  params: {
-                    brand: brand.brand,
-                  },
-                }}
-                asChild
-              >
-                <Pressable style={styles.brandItem}>
-                  <Text style={styles.brandText}>{brand.brand}</Text>
-                </Pressable>
-              </Link>
-            </View>
-          ))}
-        </View>
+        {loading ? (
+          <Text style={{ textAlign: "center", padding: 20 }}>
+            Chargement...
+          </Text>
+        ) : (
+          <View style={styles.gridContainer}>
+            {paginatedBrands.map((brand) => (
+              <View key={brand.id} style={styles.brandContainer}>
+                <Link
+                  href={{
+                    pathname: "/models",
+                    params: {
+                      brandId: brand.id,
+                      brandName: brand.name,
+                    },
+                  }}
+                  asChild
+                >
+                  <Pressable style={styles.brandItem}>
+                    <Text style={styles.brandText}>{brand.name}</Text>
+                  </Pressable>
+                </Link>
+              </View>
+            ))}
+          </View>
+        )}
 
         {/* Pagination Controls */}
         <View style={styles.paginationContainer}>

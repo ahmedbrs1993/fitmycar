@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, Link } from "expo-router";
-import { useState } from "react";
-import { carData } from "@/data/cars";
+import { useState, useEffect } from "react";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+import { API_BASE_URL_API } from "@/constants/api";
 
 import Header from "@/components/Header";
 
@@ -20,13 +20,49 @@ const chat = require("@/assets/images/chat.png");
 
 const MODELS_PER_PAGE = 12;
 
+type Model = {
+  id: number;
+  name: string;
+};
+
 export default function ModelsScreen() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { brand }: { brand: string } = useLocalSearchParams();
+  const [models, setModels] = useState<Model[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const { brandId, brandName }: { brandId: string; brandName: string } =
+    useLocalSearchParams();
 
-  const brandData = carData.find((item) => item.brand === brand);
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await fetch(
+          `${API_BASE_URL_API}/models?brand=/api/brands/${brandId}`,
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
 
-  if (!brandData) {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+        setModels(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching models:", err);
+        setError("Impossible de charger les modèles.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (brandId) fetchModels();
+  }, [brandId]);
+
+  if (!brandId) {
     return (
       <View style={styles.container}>
         <Text>Brand not found</Text>
@@ -34,7 +70,6 @@ export default function ModelsScreen() {
     );
   }
 
-  const models = brandData.models;
   const totalPages = Math.ceil(models.length / MODELS_PER_PAGE);
   const paginatedModels = models.slice(
     (currentPage - 1) * MODELS_PER_PAGE,
@@ -55,26 +90,35 @@ export default function ModelsScreen() {
         </View>
 
         {/* Models Grid - 3 per row */}
-        <View style={styles.gridContainer}>
-          {paginatedModels.map((model) => (
-            <View key={model.name} style={styles.modelContainer}>
-              <Link
-                href={{
-                  pathname: "/generations",
-                  params: {
-                    brand,
-                    model: model.name,
-                  },
-                }}
-                asChild
-              >
-                <Pressable style={styles.modelItem}>
-                  <Text style={styles.modelText}>{model.name}</Text>
-                </Pressable>
-              </Link>
-            </View>
-          ))}
-        </View>
+        {loading ? (
+          <Text style={{ textAlign: "center", padding: 20 }}>
+            Chargement...
+          </Text>
+        ) : error ? (
+          <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
+        ) : (
+          <View style={styles.gridContainer}>
+            {paginatedModels.map((model) => (
+              <View key={model.name} style={styles.modelContainer}>
+                <Link
+                  href={{
+                    pathname: "/generations",
+                    params: {
+                      modelId: model.id,
+                      modelName: model.name,
+                      brandName,
+                    },
+                  }}
+                  asChild
+                >
+                  <Pressable style={styles.modelItem}>
+                    <Text style={styles.modelText}>{model.name}</Text>
+                  </Pressable>
+                </Link>
+              </View>
+            ))}
+          </View>
+        )}
 
         {/* Pagination Controls */}
         <View style={styles.paginationContainer}>
