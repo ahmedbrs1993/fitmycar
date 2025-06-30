@@ -29,7 +29,7 @@ export type Product = {
 
 export type ProductCompatibility = {
   id: number;
-  fuelType: string; // or possibly an object if expanded
+  fuelType: string;
   product: Product;
 };
 
@@ -51,7 +51,7 @@ export default function ProductsScreen() {
   const model = vehicle.model || params.model;
   const generation = vehicle.generation || params.generation;
   const fuelType = vehicle.fuelType || params.fuelTypeName;
-  const fuelTypeId = params.fuelTypeId;
+  const fuelTypeId = vehicle.fuelTypeId || params.fuelTypeId;
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -75,7 +75,7 @@ export default function ProductsScreen() {
 
         const filtered: Product[] = data
           .map((compatibility) => compatibility.product)
-          .filter((product) => product?.category === "balais");
+          .filter((productFiltered) => productFiltered?.category === product);
 
         setProducts(filtered);
       } catch (err) {
@@ -163,7 +163,6 @@ export default function ProductsScreen() {
 }
 
 const styles = StyleSheet.create({
-  // (same styles you had, no need to repeat unless you want improvements)
   container: { flex: 1, backgroundColor: Colors.white },
   scrollContainer: { flexGrow: 1 },
   resultsTitleContainer: { marginBottom: 16 },

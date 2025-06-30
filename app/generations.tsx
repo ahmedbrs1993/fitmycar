@@ -70,6 +70,7 @@ export default function GenerationsScreen() {
         model: modelName,
         generation: generation.name,
         fuelType: "",
+        fuelTypeId: 0,
       })
     );
     router.push({

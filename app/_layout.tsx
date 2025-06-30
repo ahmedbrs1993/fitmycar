@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import { Provider } from "react-redux";
 import { store } from "@/store/";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { setupUrlCleaner } from "@/lib/cleanupExpoRouter";
+import { Platform } from "react-native";
 
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
@@ -18,6 +20,10 @@ import "react-native-reanimated";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  if (Platform.OS === "web") {
+    setupUrlCleaner();
+  }
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("@/assets/fonts/SpaceMono-Regular.ttf"),

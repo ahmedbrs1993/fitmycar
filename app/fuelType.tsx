@@ -75,6 +75,7 @@ export default function FuelTypeScreen() {
         model: modelName,
         generation: generationName,
         fuelType: fuel.fuelName || "Inconnu",
+        fuelTypeId: fuel.id, 
       })
     );
 

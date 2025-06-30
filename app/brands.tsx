@@ -70,7 +70,7 @@ export default function BrandsScreen() {
   const [error, setError] = useState("");
 
   const handleChange = (text: string) => {
-    const rawText = text.replace(/[^A-Za-z0-9]/g, "").toUpperCase(); // sanitize
+    const rawText = text.replace(/[^A-Za-z0-9]/g, "").toUpperCase(); 
     if (rawText.length <= 7) {
       setImmatriculation(rawText);
 

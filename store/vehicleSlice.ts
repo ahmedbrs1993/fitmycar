@@ -5,6 +5,7 @@ type VehicleState = {
   model: string | null;
   generation: string | null;
   fuelType: string | null;
+  fuelTypeId: number | null;
 };
 
 const initialState: VehicleState = {
@@ -12,6 +13,7 @@ const initialState: VehicleState = {
   model: null,
   generation: null,
   fuelType: null,
+  fuelTypeId: null,
 };
 
 export const vehicleSlice = createSlice({
@@ -25,18 +27,21 @@ export const vehicleSlice = createSlice({
         model: string;
         generation: string;
         fuelType: string;
+        fuelTypeId: number;
       }>
     ) => {
       state.brand = action.payload.brand;
       state.model = action.payload.model;
       state.generation = action.payload.generation;
       state.fuelType = action.payload.fuelType;
+      state.fuelTypeId = action.payload.fuelTypeId;
     },
     clearVehicleConfig: (state) => {
       state.brand = null;
       state.model = null;
       state.generation = null;
       state.fuelType = null;
+      state.fuelTypeId = null;
     },
   },
 });
