@@ -13,34 +13,17 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
-import { API_BASE_URL, API_BASE_URL_API } from "@/constants/api";
+import { API_BASE_URL } from "@/constants/api";
+import { getCompatibleProducts } from "@/lib/api";
+import { Typography } from "@/constants/Typography";
+
+import { Product, VehicleSearchParams } from "@/types/products";
+
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Header from "@/components/Header";
 
-export type Product = {
-  id: number;
-  name: string;
-  brand: string;
-  image: string;
-  price: number;
-  specs: string[];
-  category: string;
-};
-
-export type ProductCompatibility = {
-  id: number;
-  fuelType: string;
-  product: Product;
-};
-
 export default function ProductsScreen() {
-  const params = useLocalSearchParams<{
-    brand: string;
-    model: string;
-    generation: string;
-    fuelTypeId: string;
-    fuelTypeName: string;
-  }>();
+  const params = useLocalSearchParams<VehicleSearchParams>();
 
   const vehicle = useSelector((state: RootState) => state.vehicle);
   const { product, subProduct } = useSelector(
@@ -58,26 +41,12 @@ export default function ProductsScreen() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadProducts = async () => {
       try {
-        const res = await fetch(
-          `${API_BASE_URL_API}/product_compatibilities?fuelType=/api/fuel_types/${fuelTypeId}`,
-          {
-            headers: { Accept: "application/json" },
-          }
-        );
+        if (!fuelTypeId) return;
 
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-
-        const data: ProductCompatibility[] = await res.json();
-
-        const filtered: Product[] = data
-          .map((compatibility) => compatibility.product)
-          .filter((productFiltered) => productFiltered?.category === product);
-
-        setProducts(filtered);
+        const compatible = await getCompatibleProducts(fuelTypeId, product);
+        setProducts(compatible);
       } catch (err) {
         console.error("Erreur lors du chargement des produits:", err);
         setError("Impossible de charger les produits.");
@@ -86,7 +55,7 @@ export default function ProductsScreen() {
       }
     };
 
-    if (fuelTypeId) fetchProducts();
+    loadProducts();
   }, [fuelTypeId]);
 
   return (
@@ -134,27 +103,35 @@ export default function ProductsScreen() {
           <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
         ) : (
           <View style={styles.productsContainer}>
-            {products.map((item) => (
-              <Pressable key={item.id} style={styles.productCard}>
-                <Image
-                  source={{
-                    uri: `${API_BASE_URL}/images/products/${item.image}`,
-                  }}
-                  style={styles.productImage}
-                  resizeMode="contain"
-                />
-                <View style={styles.productDetails}>
-                  <Text style={styles.productName}>{item.name}</Text>
-                  <Text style={styles.productBrand}>{item.brand}</Text>
-                  <Text style={styles.productPrice}>
-                    {item.price.toFixed(2)} €
-                  </Text>
-                  {item.specs && (
-                    <Text style={styles.specText}>{item.specs}</Text>
-                  )}
-                </View>
-              </Pressable>
-            ))}
+            {products.length === 0 ? (
+              <View style={styles.noProductsContainer}>
+                <Text style={styles.noProductsText}>
+                  Aucun produit disponible pour ce véhicule.
+                </Text>
+              </View>
+            ) : (
+              products.map((item) => (
+                <Pressable key={item.id} style={styles.productCard}>
+                  <Image
+                    source={{
+                      uri: `${API_BASE_URL}/images/products/${item.image}`,
+                    }}
+                    style={styles.productImage}
+                    resizeMode="contain"
+                  />
+                  <View style={styles.productDetails}>
+                    <Text style={styles.productName}>{item.name}</Text>
+                    <Text style={styles.productBrand}>{item.brand}</Text>
+                    <Text style={styles.productPrice}>
+                      {item.price.toFixed(2)} €
+                    </Text>
+                    {item.specs && (
+                      <Text style={styles.specText}>{item.specs}</Text>
+                    )}
+                  </View>
+                </Pressable>
+              ))
+            )}
           </View>
         )}
       </ScrollView>
@@ -167,7 +144,7 @@ const styles = StyleSheet.create({
   scrollContainer: { flexGrow: 1 },
   resultsTitleContainer: { marginBottom: 16 },
   resultsTitle: {
-    fontSize: 20,
+    fontSize: Typography.fontSize.lg + 2,
     fontWeight: "bold",
     color: Colors.red,
     textAlign: "center",
@@ -242,28 +219,41 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   productName: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
     fontWeight: "bold",
     marginBottom: 2,
     textAlign: "center",
   },
   productBrand: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.sm,
     color: Colors.darkGrey,
     marginBottom: 2,
     textAlign: "center",
   },
   productPrice: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.base,
     fontWeight: "bold",
     color: Colors.primary,
     marginBottom: 6,
     textAlign: "center",
   },
   specText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.sm,
     color: Colors.darkGrey,
     lineHeight: 18,
+    textAlign: "center",
+  },
+  noProductsContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 40,
+    width: "100%",
+  },
+  noProductsText: {
+    fontSize: Typography.fontSize.xl,
+    fontWeight: "bold",
+    color: Colors.black,
     textAlign: "center",
   },
 });

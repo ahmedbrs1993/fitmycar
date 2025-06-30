@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  StyleSheet,
-  useWindowDimensions,
-} from "react-native";
+import { View, Image, StyleSheet, useWindowDimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store";
@@ -14,33 +7,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
+import { productDisplayNames, images, subOptions, TABLET_MIN_WIDTH } from "@/constants/contants";
 
+import BrickButton from "@/components/BrickButton";
 import Header from "@/components/Header";
 
-// Display name mapping
-const productDisplayNames: Record<string, string> = {
-  balais: "Balais essuie glace",
-  eclairage: "Éclairage",
-  batteries: "Batteries",
-  "huiles-moteur": "Huiles moteur",
-  filtres: "Filtres et accessoires",
-  "lave-glaces": "Lave-glaces",
-  "liquide-refroidissement": "Liquide de refroidissement",
-};
-
-// Images by display name
-const images: Record<string, any> = {
-  "Huiles moteur": require("@/assets/images/huile-diag.jpg"),
-  "Filtres et accessoires": require("@/assets/images/filtres-accessoires.jpg"),
-};
-
-// Sub-products by display name
-const subOptions: Record<string, string[]> = {
-  "Huiles moteur": ["Vidange", "Appoint"],
-  "Filtres et accessoires": ["Joints et bouchons", "Filtres à huile"],
-};
-
-const TABLET_MIN_WIDTH = 870;
 
 export default function SubProductScreen() {
   const router = useRouter();
@@ -85,18 +56,12 @@ export default function SubProductScreen() {
 
         <View style={styles.rightContainer}>
           {subOptions[displayName]?.map((sub, index) => (
-            <Pressable
+            <BrickButton
               key={index}
-              style={[
-                styles.brick,
-                {
-                  maxWidth: isTablet ? 200 : 175,
-                },
-              ]}
+              label={sub}
+              maxWidth={isTablet ? 200 : 175}
               onPress={() => handleSubProductPress(sub)}
-            >
-              <Text style={styles.brickText}>{sub}</Text>
-            </Pressable>
+            />
           ))}
         </View>
       </View>

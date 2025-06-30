@@ -1,4 +1,4 @@
-# Welcome to your Borne Auchan app 👋
+# Welcome to your Fit My Car app 👋
 
 This is a UI for a mobile App for Auchan
 

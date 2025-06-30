@@ -12,6 +12,8 @@ import { Colors } from "../constants/Colors";
 import { Spacing } from "../constants/Spacing";
 import { Typography } from "../constants/Typography";
 import { Platform } from "react-native";
+import { useNavigation, useRouter } from "expo-router";
+import { TABLET_MIN_WIDTH, SMALL_SCREEN_WIDTH } from "@/constants/contants";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -21,8 +23,6 @@ interface HeaderProps {
 
 const logo = require("../assets/images/auchan-logo.png");
 const googlePlay = require("@/assets/images/google-play.png");
-const TABLET_MIN_WIDTH = 870;
-const SMALL_SCREEN_WIDTH = 450;
 
 export default function Header({
   showBack = false,
@@ -33,37 +33,44 @@ export default function Header({
   const apkUrl = "https://expo.dev/artifacts/eas/5pWZibpMLaEgjw9EZw6nG2.apk";
   const isSmallScreen = width < SMALL_SCREEN_WIDTH;
   const isTablet = width >= TABLET_MIN_WIDTH;
+  const navigation = useNavigation();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
         {showBack && (
-          <Link
-            href="../"
-            asChild
-            style={{
-              width: isSmallScreen ? 90 : 140,
+          <Pressable
+            onPress={() => {
+              if (navigation.canGoBack?.()) {
+                navigation.goBack();
+              } else {
+                router.push("/");
+              }
             }}
+            style={[
+              styles.navButton,
+              {
+                width: isSmallScreen ? 90 : 140,
+              },
+            ]}
           >
-            <Pressable style={styles.navButton}>
-              <View style={styles.buttonContent}>
-                <Ionicons
-                  name="arrow-back"
-                  size={isSmallScreen ? 24 : 32}
-                  color="white"
-                />
-
-                <Text
-                  style={[
-                    styles.navButtonText,
-                    isSmallScreen && styles.navSmallButtonText,
-                  ]}
-                >
-                  Back
-                </Text>
-              </View>
-            </Pressable>
-          </Link>
+            <View style={styles.buttonContent}>
+              <Ionicons
+                name="arrow-back"
+                size={isSmallScreen ? 24 : 32}
+                color="white"
+              />
+              <Text
+                style={[
+                  styles.navButtonText,
+                  isSmallScreen && styles.navSmallButtonText,
+                ]}
+              >
+                Back
+              </Text>
+            </View>
+          </Pressable>
         )}
         {showHome && (
           <Link

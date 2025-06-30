@@ -18,13 +18,12 @@ import { RootState } from "@/store";
 import { clearVehicleConfig } from "@/store/vehicleSlice";
 import { setProduct, clearProduct } from "@/store/productSlice";
 import { useEffect } from "react";
+import { TABLET_MIN_WIDTH, SMALL_SCREEN_WIDTH } from "@/constants/contants";
 
 import Header from "@/components/Header";
 
 const slogan = require("@/assets/images/auchan-slogan.jpg");
 const leftImage = require("@/assets/images/auchan-recharge.jpg");
-const TABLET_MIN_WIDTH = 870;
-const SMALL_SCREEN_WIDTH = 450;
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();

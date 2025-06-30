@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Borne Auchan",
-    "slug": "borneAuchan",
+    "name": "fitmycar",
+    "slug": "fitmycar",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,14 +9,15 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ahach.fitmycar"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ahach.borneAuchan"
+      "package": "com.ahach.fitmycar"
     },
     "web": {
       "bundler": "metro",
@@ -43,8 +44,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "99050330-7188-4ab5-87e4-6b88209554a5"
+        "projectId": "d7b59f08-cd3f-4326-aa42-f7f113d4ccca"
       }
-    }
+    },
+    "owner": "ahach"
   }
 }
