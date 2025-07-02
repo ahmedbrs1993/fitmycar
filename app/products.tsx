@@ -125,8 +125,14 @@ export default function ProductsScreen() {
                     <Text style={styles.productPrice}>
                       {item.price.toFixed(2)} €
                     </Text>
-                    {item.specs && (
-                      <Text style={styles.specText}>{item.specs}</Text>
+                    {item.specs && Array.isArray(item.specs) && (
+                      <View style={{ marginTop: 4 }}>
+                        {item.specs.map((spec, index) => (
+                          <Text key={index} style={styles.specText}>
+                            {spec}
+                          </Text>
+                        ))}
+                      </View>
                     )}
                   </View>
                 </Pressable>
