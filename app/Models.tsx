@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
-import { API_BASE_URL_API } from "@/constants/api";
+import { API_BASE_URL_API } from "@/constants/Api";
 
 import Header from "@/components/Header";
 
@@ -102,7 +102,7 @@ export default function ModelsScreen() {
               <View key={model.name} style={styles.modelContainer}>
                 <Link
                   href={{
-                    pathname: "/generations",
+                    pathname: "/Generations",
                     params: {
                       modelId: model.id,
                       modelName: model.name,

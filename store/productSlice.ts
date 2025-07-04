@@ -1,13 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export type ProductType =
-  | "balais"
-  | "eclairage"
-  | "batteries"
-  | "huiles-moteur"
-  | "filtres"
-  | "lave-glaces"
-  | "liquide-refroidissement";
+import { ProductType } from "../types/products";
 
 interface ProductState {
   product: ProductType | null;

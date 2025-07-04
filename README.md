@@ -1,20 +1,33 @@
 # Welcome to your Fit My Car app 👋
 
-This is a UI for a mobile App for Auchan
+This is the UI for a mobile app for Auchan.
+
+## Requirements
+
+- [Node.js](https://nodejs.org/) (Recommended version >= 14)
+- [npm](https://www.npmjs.com/) or [Yarn](https://yarnpkg.com/) package manager
+- [Expo CLI](https://docs.expo.dev/workflow/expo-cli/) installed globally:
+
+```bash
+npm install -g expo-cli
+```
+
+- For iOS simulator: [Xcode](https://developer.apple.com/xcode/) installed on macOS
+- For Android emulator: [Android Studio](https://developer.android.com/studio) installed and configured
 
 ## Get started
 
 1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+```
 
 2. Start the app
 
-   ```bash
-    npx expo start
-   ```
+```bash
+npx expo start
+```
 
 In the output, you'll find options to open the app in a
 

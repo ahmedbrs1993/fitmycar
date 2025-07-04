@@ -9,41 +9,36 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { setVehicleConfig } from "@/store/vehicleSlice";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
-import { API_BASE_URL_API } from "@/constants/api";
+import { API_BASE_URL_API } from "@/constants/Api";
 
 import Header from "@/components/Header";
 
 const chat = require("@/assets/images/chat.png");
 
-type FuelType = {
+type Generation = {
   id: number;
-  fuel: string;
-  generation: string;
-  modelName?: string;
-  brandName?: string;
-  fuelName?: string;
+  name: string;
 };
 
-export default function FuelTypeScreen() {
-  const { generationId, brandName, modelName, generationName }: any =
-    useLocalSearchParams();
+export default function GenerationsScreen() {
+  const { modelId, modelName, brandName }: any = useLocalSearchParams();
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const [fuelTypes, setFuelTypes] = useState<FuelType[]>([]);
+  const [generations, setGenerations] = useState<Generation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchFuelTypes = async () => {
+    const fetchGenerations = async () => {
       try {
         const res = await fetch(
-          `${API_BASE_URL_API}/fuel_types?generation=/api/generations/${generationId}`,
+          `${API_BASE_URL_API}/generations?model=/api/models/${modelId}`,
           {
             headers: {
               Accept: "application/json",
@@ -56,37 +51,35 @@ export default function FuelTypeScreen() {
         }
 
         const data = await res.json();
-        setFuelTypes(Array.isArray(data) ? data : []);
+        setGenerations(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error("Erreur lors du chargement des types de carburant:", err);
-        setError("Impossible de charger les types de carburant.");
+        console.error("Erreur lors du chargement des générations:", err);
+        setError("Erreur lors du chargement des générations.");
       } finally {
         setLoading(false);
       }
     };
 
-    if (generationId) fetchFuelTypes();
-  }, [generationId]);
+    if (modelId) fetchGenerations();
+  }, [modelId]);
 
-  const handleFuelTypeSelect = (fuel: FuelType) => {
+  const handleSelect = (generation: Generation) => {
     dispatch(
       setVehicleConfig({
         brand: brandName,
         model: modelName,
-        generation: generationName,
-        fuelType: fuel.fuelName || "Inconnu",
-        fuelTypeId: fuel.id, 
+        generation: generation.name,
+        fuelType: "",
+        fuelTypeId: 0,
       })
     );
-
     router.push({
-      pathname: "/products",
+      pathname: "/FuelType",
       params: {
-        brand: brandName,
-        model: modelName,
-        generation: generationName,
-        fuelTypeId: fuel.id,
-        fuelTypeName: fuel.fuelName,
+        generationId: generation.id,
+        brandName,
+        modelName,
+        generationName: generation.name,
       },
     });
   };
@@ -99,25 +92,23 @@ export default function FuelTypeScreen() {
         <View style={styles.instructionContainer}>
           <Image source={chat} style={styles.chat} resizeMode="contain" />
           <Text style={styles.instructionText}>
-            Choisissez le type de carburant
+            Sélectionnez la génération de votre véhicule
           </Text>
         </View>
 
         {loading ? (
           <Text style={{ textAlign: "center" }}>Chargement...</Text>
         ) : error ? (
-          <Text style={styles.errorText}>{error}</Text>
+          <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
         ) : (
           <View style={styles.gridContainer}>
-            {fuelTypes.map((fuel) => (
+            {generations.map((generation) => (
               <Pressable
-                key={fuel.id}
-                style={styles.fuelItem}
-                onPress={() => handleFuelTypeSelect(fuel)}
+                key={generation.id}
+                onPress={() => handleSelect(generation)}
+                style={styles.generationItem}
               >
-                <Text style={styles.fuelText}>
-                  {fuel.fuelName || "Type inconnu"}
-                </Text>
+                <Text style={styles.generationText}>{generation.name}</Text>
               </Pressable>
             ))}
           </View>
@@ -132,18 +123,14 @@ const styles = StyleSheet.create({
   scrollContainer: { flexGrow: 1 },
   instructionContainer: {
     padding: Spacing.md,
+    width: "100%",
     alignItems: "center",
   },
+  chat: { width: 100, height: 40 },
   instructionText: {
+    color: Colors.red,
     fontSize: Typography.fontSize.base,
     fontWeight: "bold",
-    color: Colors.red,
-    textAlign: "center",
-  },
-  chat: {
-    width: 100,
-    height: 40,
-    marginBottom: Spacing.md,
   },
   gridContainer: {
     flexDirection: "row",
@@ -151,7 +138,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: Spacing.lg,
   },
-  fuelItem: {
+  generationItem: {
     width: "48%",
     backgroundColor: Colors.lightGrey,
     padding: Spacing.lg,
@@ -166,15 +153,10 @@ const styles = StyleSheet.create({
     elevation: 5,
     height: 100,
   },
-  fuelText: {
+  generationText: {
     fontSize: Typography.fontSize.base,
     fontWeight: "bold",
     color: Colors.black,
-  },
-  errorText: {
-    fontSize: Typography.fontSize.base,
-    color: Colors.red,
     textAlign: "center",
-    marginTop: 50,
   },
 });

@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["vehicle", "product"], // les slices à persister
+  whitelist: ["vehicle", "product"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -21,7 +21,7 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // sinon redux-persist crashe
+      serializableCheck: false,
     }),
 });
 

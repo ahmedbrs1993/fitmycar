@@ -1,12 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-type VehicleState = {
-  brand: string | null;
-  model: string | null;
-  generation: string | null;
-  fuelType: string | null;
-  fuelTypeId: number | null;
-};
+import { VehicleState } from "../types/vehicle";
 
 const initialState: VehicleState = {
   brand: null,

@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
-import { API_BASE_URL_API } from "@/constants/api";
+import { API_BASE_URL_API } from "@/constants/Api";
 
 import Header from "@/components/Header";
 
@@ -70,7 +70,7 @@ export default function BrandsScreen() {
   const [error, setError] = useState("");
 
   const handleChange = (text: string) => {
-    const rawText = text.replace(/[^A-Za-z0-9]/g, "").toUpperCase(); 
+    const rawText = text.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
     if (rawText.length <= 7) {
       setImmatriculation(rawText);
 
@@ -132,7 +132,7 @@ export default function BrandsScreen() {
               <View key={brand.id} style={styles.brandContainer}>
                 <Link
                   href={{
-                    pathname: "/models",
+                    pathname: "/Models",
                     params: {
                       brandId: brand.id,
                       brandName: brand.name,

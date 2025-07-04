@@ -44,12 +44,12 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="brands" options={{ headerShown: false }} />
-          <Stack.Screen name="models" options={{ headerShown: false }} />
-          <Stack.Screen name="generations" options={{ headerShown: false }} />
-          <Stack.Screen name="fuelType" options={{ headerShown: false }} />
-          <Stack.Screen name="products" options={{ headerShown: false }} />
-          <Stack.Screen name="subProduct" options={{ headerShown: false }} />
+          <Stack.Screen name="Brands" options={{ headerShown: false }} />
+          <Stack.Screen name="Models" options={{ headerShown: false }} />
+          <Stack.Screen name="Generations" options={{ headerShown: false }} />
+          <Stack.Screen name="FuelType" options={{ headerShown: false }} />
+          <Stack.Screen name="Products" options={{ headerShown: false }} />
+          <Stack.Screen name="SubProduct" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="auto" />
       </ThemeProvider>

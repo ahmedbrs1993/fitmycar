@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Colors } from "@/constants/Colors";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "@/constants/api";
+import { API_BASE_URL } from "@/constants/Api";
 import { getCompatibleProducts } from "@/lib/api";
 import { Typography } from "@/constants/Typography";
 

@@ -7,11 +7,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Typography } from "@/constants/Typography";
-import { productDisplayNames, images, subOptions, TABLET_MIN_WIDTH } from "@/constants/contants";
+import {
+  productDisplayNames,
+  images,
+  subOptions,
+  TABLET_MIN_WIDTH,
+} from "@/constants/Contants";
 
 import BrickButton from "@/components/BrickButton";
 import Header from "@/components/Header";
-
 
 export default function SubProductScreen() {
   const router = useRouter();
@@ -32,9 +36,9 @@ export default function SubProductScreen() {
   const handleSubProductPress = (subProduct: string) => {
     dispatch(setSubProduct(subProduct));
     if (hasVehicleConfig) {
-      router.push("/products");
+      router.push("/Products");
     } else {
-      router.push("/brands");
+      router.push("/Brands");
     }
   };
 

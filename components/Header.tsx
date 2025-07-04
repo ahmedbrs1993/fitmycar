@@ -13,7 +13,7 @@ import { Spacing } from "../constants/Spacing";
 import { Typography } from "../constants/Typography";
 import { Platform } from "react-native";
 import { useNavigation, useRouter } from "expo-router";
-import { TABLET_MIN_WIDTH, SMALL_SCREEN_WIDTH } from "@/constants/contants";
+import { TABLET_MIN_WIDTH, SMALL_SCREEN_WIDTH } from "@/constants/Contants";
 
 interface HeaderProps {
   showBack?: boolean;

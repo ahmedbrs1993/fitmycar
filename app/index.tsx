@@ -18,7 +18,7 @@ import { RootState } from "@/store";
 import { clearVehicleConfig } from "@/store/vehicleSlice";
 import { setProduct, clearProduct } from "@/store/productSlice";
 import { useEffect } from "react";
-import { TABLET_MIN_WIDTH, SMALL_SCREEN_WIDTH } from "@/constants/contants";
+import { TABLET_MIN_WIDTH, SMALL_SCREEN_WIDTH } from "@/constants/Contants";
 
 import Header from "@/components/Header";
 
@@ -47,11 +47,11 @@ export default function HomeScreen() {
   const handleBrickPress = (item: any) => {
     dispatch(setProduct(item.product));
     if (item.subProducts) {
-      router.push("/subProduct");
+      router.push("/SubProduct");
     } else if (hasVehicleConfig) {
-      router.push("/products");
+      router.push("/Products");
     } else {
-      router.push("/brands");
+      router.push("/Brands");
     }
   };
 

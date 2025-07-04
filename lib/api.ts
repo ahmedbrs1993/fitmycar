@@ -1,4 +1,4 @@
-import { API_BASE_URL_API } from "@/constants/api";
+import { API_BASE_URL_API } from "@/constants/Api";
 import { ProductCompatibility, Product } from "@/types/products";
 
 export async function getCompatibleProducts(

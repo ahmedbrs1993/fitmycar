@@ -21,3 +21,12 @@ export type VehicleSearchParams = {
   fuelTypeId: string;
   fuelTypeName: string;
 };
+
+export type ProductType =
+  | "balais"
+  | "eclairage"
+  | "batteries"
+  | "huiles-moteur"
+  | "filtres"
+  | "lave-glaces"
+  | "liquide-refroidissement";
