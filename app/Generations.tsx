@@ -8,8 +8,6 @@ import {
   Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
-import { setVehicleConfig } from "@/store/vehicleSlice";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
@@ -27,7 +25,6 @@ type Generation = {
 
 export default function GenerationsScreen() {
   const { modelId, modelName, brandName }: any = useLocalSearchParams();
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const [generations, setGenerations] = useState<Generation[]>([]);
@@ -64,15 +61,6 @@ export default function GenerationsScreen() {
   }, [modelId]);
 
   const handleSelect = (generation: Generation) => {
-    dispatch(
-      setVehicleConfig({
-        brand: brandName,
-        model: modelName,
-        generation: generation.name,
-        fuelType: "",
-        fuelTypeId: 0,
-      })
-    );
     router.push({
       pathname: "/FuelType",
       params: {
